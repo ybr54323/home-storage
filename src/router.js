@@ -32,7 +32,7 @@ const router = new VueRouter({
   }]
 })
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !localStorage.getItem("name")) next({name: 'Login'})
+  if (to.name !== 'Login' && !localStorage.getItem("userInfo")) next({name: 'Login'})
   else next()
 })
 

@@ -2,8 +2,15 @@ import axios from 'axios';
 import {Toast, Dialog} from 'vant';
 import store from '../store/index'
 
+/**
+ * 401 未登录 - 跳到登录页
+ * 402 参数错误 - 当前页处理
+ * 408 未知错误 - 当前页处理
+ * 500 后台代码错误
+ */
+
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASEURL,
+  baseURL: 'http://localhost:7001',
   timeout: 30000 // 请求超时时间
 });
 
@@ -22,25 +29,27 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  response => {
+  ({status, data: {code, data, msg}}) => {
     Toast.clear();
-    if (response.status === 200) {
-      if (response.data.code === 401) { // 未登录
-        store.commit('setShowTarBar', false)
-        window.history.href = window.location.host + '/#/login'
-        Toast.fail('请先登录')
-        return Promise.reject(response.data)
-      } else if (response.data.code === 402) { // 参数错误
-        Toast.fail('参数错误')
-        return Promise.reject(response.data)
-      }
-      Toast.success(response.data.msg)
-      return Promise.resolve(response.data)
+    if (code === 200) {
+      Toast.success(msg)
+      return Promise.resolve(data)
+    }
+    if (code === 401) {
+      store.commit('setShowTarBar', false)
+      window.history.href = window.location.host + '/#/login'
+      Toast.fail(msg)
+      return Promise.reject(code)
+    }
+    if (code === 402 || code === 500) {
+      Toast.fail(msg)
+      return Promise.reject(code)
     }
   },
   error => {
+    debugger
     Toast.clear();
-    Toast.fail(error.response.data.message);
+    Toast.fail(error.response.data.msg);
     return Promise.reject(error);
   }
 );

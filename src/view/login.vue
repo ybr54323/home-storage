@@ -110,10 +110,10 @@
         </van-form>
       </div>
       <div class="step4" v-if="step===4">
-        {{forgetForm}}
-        <van-form ref="forgetForm">
+        {{resetForm}}
+        <van-form ref="resetForm">
           <van-field
-              v-model="forgetForm.phone"
+              v-model="resetForm.phone"
               type="tel"
               clearablel
               label="手机号"
@@ -121,7 +121,7 @@
               :rules="[{ required: true, message: '请输入手机号', trigger: 'blur', validator: num }]"
           />
           <van-field
-              v-model="forgetForm.code"
+              v-model="resetForm.code"
               type="digit"
               clearable
               center
@@ -130,21 +130,21 @@
               :rules="[{ required: true, message: '请输入短信验证码', trigger: 'blur',validator: num }]"
           >
             <template #button>
-              <van-button :disabled="forgetForm.wait" size="small" type="primary" @click="onSendCode">
-                {{forgetForm.wait ? forgetForm.waitSec + 's' : '发送验证码'}}
+              <van-button :disabled="resetForm.wait" size="small" type="primary" @click="onSendCode">
+                {{resetForm.wait ? resetForm.waitSec + 's' : '发送验证码'}}
               </van-button>
             </template>
           </van-field>
           <van-field
-              v-model="forgetForm.pwd"
-              :type="forgetForm.viewPwd ? 'text':'password'"
+              v-model="resetForm.pwd"
+              :type="resetForm.viewPwd ? 'text':'password'"
               clearable
               label="密码"
               placeholder="请输入密码"
               :rules="[{ required: true, message: '密码不能为空', trigger: 'blur',validator: notEmpty }]"
           >
             <template #button>
-              <van-icon name="eye-o" color="#07c160" @click="forgetForm.viewPwd = !forgetForm.viewPwd">
+              <van-icon name="eye-o" color="#07c160" @click="resetForm.viewPwd = !resetForm.viewPwd">
               </van-icon>
             </template>
           </van-field>
@@ -161,7 +161,14 @@
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
-import {getZhenziCode, login, register, forgetPwd} from '@/sevice/api'
+import {
+  getRegisterOrLoginCode, // 获取 注册 / 登录 的短信验证码
+  registerOrLogin, // 短信验证码 注册 / 登录 新用户-注册 老用户-直接登录
+  register,
+  phonePwdLogin,
+  getResetCode,
+  resetPwd
+} from '@/sevice/user'
 
 export default {
   name: "Login",
@@ -169,7 +176,7 @@ export default {
     /**
      *
      * @type {Map<number, {leftText: string, title: string}>}
-     * key: 1: 发送验证码 code 2: 新用户 3: 账号密码登录
+     * key: 1: 发送验证码 code 2: 新用户 3: 账号密码登录 4.重设密码
      */
     const operationMap = new Map([
       [
@@ -201,7 +208,7 @@ export default {
         pwd: '',
         viewPwd: false
       },
-      forgetForm: {
+      resetForm: {
         phone: '',
         code: '',
         waitSec: 0,
@@ -229,84 +236,59 @@ export default {
     this.setShowTarBar(false)
   },
   methods: {
-    ...mapMutations({
-      setShowTarBar: 'setShowTarBar'
-    }),
+    ...mapMutations(['setUserInfo', 'setShowTarBar']),
     onSubmit() {
-      // 0: 初始状态 1: 发送登录/注册验证码 2: 新用户 3: 账号密码登录 4.发送忘记密码验证码
-      const {step, codeForm, registerForm, loginForm, forgetForm, $refs: ref} = this
-      const form =
-          step === 1 ? codeForm :
-              step === 2 ? registerForm :
-                  step === 3 ? loginForm :
-                      step === 4 ? forgetForm : null
-      const v =
-          step === 1 ? () => ref[form].validate() :
-              step === 2 ? () => ref[form].validate(form.usePwd ? 'username' : undefined) :
-                  step === 3 ? () => ref[form].validate(form.usePwd ? 'account' : undefined) :
-                      step === 4 ? () => ref[form].validate() : null
-      const api =
-          step === 1 ? getZhenziCode :
-              step === 2 ? register :
-                  step === 3 ? login :
-                      step === 4 ? forgetPwd : null
+      // 0: 初始状态 1: 发送登录/注册验证码 2: 新用户 3: 账号密码登录 4.重设密码
+      const {step, codeForm, registerForm, loginForm, resetForm, $refs: ref} = this
+      const [
+        form, v, api // 表单, 校验方法, 请求接口
+      ] = step === 1 ?
+          [
+            codeForm,
+            () => ref['codeForm'].validate(),
+            (form) => registerOrLogin(form),
+          ] :
+          step === 2 ?
+              [
+                registerForm,
+                () => ref['registerForm'].validate(form.usePwd ? 'username' : undefined),
+                (form) => register(form)
+              ] :
+              step === 3 ?
+                  [
+                    loginForm,
+                    () => ref['loginForm'].validate(form.usePwd ? 'account' : undefined),
+                    (form) => phonePwdLogin(form)
+                  ] :
+                  step === 4 ?
+                      [
+                        resetForm,
+                        () => ref['resetForm'].validate(),
+                        (form) => resetPwd(form)
+                      ] : [
+                        null, null, null
+                      ]
       v()
           .then(() => {
             api(form)
                 .then(res => {
-                  const {code, data, msg} = res
-                  if (code === 200) {
-                    if (step === 1) {
-                      const {userInfo: {isNewUser}} = data
-                      if (isNewUser) { // go register new user with a username
-                        this.step = 2
-                        return
-                      }
-                      // cache user info
-                      this.$router.push('Index')
-                    } else if ([2, 3, 4].indexOf(step) >= 0) { // register / login / reLogin success
-                      const {userInfo} = data
-                      // cache user info
-                      this.$router.push('Index')
-                    }
+                  const {data: {user, user: {isNewUser}}} = res
+                  if (isNewUser) {
+                    this.step = 2
+                    return
                   }
+                  this.setUserInfo(user)
+                  this.$socket.emit('login', {id: user.id})
+                  window.localStorage.setItem('userInfo', JSON.stringify(user))
+                  this.$router.push('Index')
+                })
+                .catch(code => {
                 })
           })
           .catch(err => {
             console.warn(err.stack)
           })
     },
-    // onCodeFormSubmit() {
-    //   this.$refs.codeForm.validate()
-    //       .then(() => {
-    //
-    //       })
-    //       .catch()
-    // },
-    // onRegisterFormSubmit() {
-    //   const {registerForm: r} = this
-    //   if (r.usePwd) {
-    //     this.$refs.registerForm.validate()
-    //         .then()
-    //         .catch()
-    //   } else {
-    //     this.$refs.registerForm.validate('username')
-    //         .then()
-    //         .catch()
-    //   }
-    // },
-    // onLoginFormSubmit() {
-    //   const {loginForm: l} = this
-    //   if (l.usePwd) {
-    //     this.$refs.loginForm.validate()
-    //         .then()
-    //         .catch()
-    //   } else {
-    //     this.$refs.loginForm.validate('account')
-    //         .then()
-    //         .catch()
-    //   }
-    // },
     num(val) {
       return /\d+/.test(val)
     },
@@ -315,15 +297,27 @@ export default {
     },
     onSendCode() {
       // 1, 4 才需要发验证码
-      const {step, codeForm, forgetForm} = this
+      const {step, codeForm, resetForm} = this
       if ([1, 4].indexOf(step) < 0) return
-      const form = step === 1 ? codeForm : forgetForm
+      const [api, form] = step === 1 ?
+          [
+            getRegisterOrLoginCode,
+            codeForm
+          ] :
+          [
+            getResetCode,
+            resetForm
+          ]
       if (!form.phone) return
       if (form.waitSec && form.wait) return
       if (form.wait) return
       if (!form.waitSec && !form.wait) {
-        getZhenziCode(form.phone)
-        form.waitSec = 60
+        // TODO 还没判断发送是否成功
+        api(form)
+            .then()
+            .catch()
+
+        form.waitSec = 10
         form.wait = true
         window.intervalId = setInterval(() => {
           form.waitSec--
