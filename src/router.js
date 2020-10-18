@@ -13,27 +13,35 @@ const router = new VueRouter({
     name: 'Index',
     component: Index,
     meta: {
-      title: '首页'
+      title: '首页',
+      requireLogin: true
     }
   }, {
     path: '/mine',
     name: 'Mine',
     component: Mine,
     meta: {
-      title: '我'
+      title: '我',
+      requireLogin: true
     }
   }, {
     path: '/login',
     name: 'Login',
     component: Login,
     meta: {
-      title: '登录'
+      title: '登录',
+      requireLogin: false
     }
   }]
 })
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !localStorage.getItem("userInfo")) next({name: 'Login'})
-  else next()
+  if (to.name !== 'Login' && to.meta.requireLogin && !localStorage.getItem("userInfo")) {
+    next({
+      name: 'Login', params: {
+        step: 0
+      }
+    })
+  } else next()
 })
 
 export default router

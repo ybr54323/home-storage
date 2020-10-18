@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Toast, Dialog} from 'vant';
 import store from '../store/index'
+import router from '../router';
 
 /**
  * 401 未登录 - 跳到登录页
@@ -9,9 +10,12 @@ import store from '../store/index'
  * 500 后台代码错误
  */
 
+axios.defaults.withCredentials = true // 允许跨域带cookie
+
 const service = axios.create({
   baseURL: 'http://localhost:7001',
-  timeout: 30000 // 请求超时时间
+  timeout: 30000, // 请求超时时间
+  withCredentials: true
 });
 
 service.interceptors.request.use(
@@ -29,15 +33,20 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  ({status, data: {code, data, msg}}) => {
+  response => {
+    const {code, data, msg} = response.data
     Toast.clear();
     if (code === 200) {
       Toast.success(msg)
-      return Promise.resolve(data)
+      return Promise.resolve({code, data, msg})
     }
     if (code === 401) {
       store.commit('setShowTarBar', false)
-      window.history.href = window.location.host + '/#/login'
+      // router.push({
+      //   name: 'login',
+      //   query: {step: 0}
+      // })
+      // window.history.href = window.location.host + '/#/login?step=0'
       Toast.fail(msg)
       return Promise.reject(code)
     }
@@ -47,7 +56,6 @@ service.interceptors.response.use(
     }
   },
   error => {
-    debugger
     Toast.clear();
     Toast.fail(error.response.data.msg);
     return Promise.reject(error);

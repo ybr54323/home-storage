@@ -234,6 +234,8 @@ export default {
   },
   created() {
     this.setShowTarBar(false)
+    const {step = 0} = this.$route.params
+    this.step = +step
   },
   methods: {
     ...mapMutations(['setUserInfo', 'setShowTarBar']),
@@ -246,7 +248,7 @@ export default {
           [
             codeForm,
             () => ref['codeForm'].validate(),
-            (form) => registerOrLogin(form),
+            (form) => registerOrLogin(form)
           ] :
           step === 2 ?
               [

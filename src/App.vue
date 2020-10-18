@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <van-nav-bar
-        title="标题"
-        left-text="返回"
-        right-text="按钮"
-        left-arrow
-    />
+<!--    <van-nav-bar-->
+<!--        title="标题"-->
+<!--        left-text="返回"-->
+<!--        right-text="按钮"-->
+<!--        left-arrow-->
+<!--    />-->
     <router-view></router-view>
     <van-tabbar v-if="appStatus.showTarBar" route active-color="#07c160" inactive-color="#000">
       <van-tabbar-item to="/" replace icon="home-o">首页</van-tabbar-item>
