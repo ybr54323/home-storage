@@ -11,6 +11,7 @@
       <div class="step0" v-if="step===0">
         <van-button class="btn" @click="step = 1" type="primary" block>手机号码验证码登录</van-button>
         <van-button class="btn" @click="step = 3" type="primary" block>账号密码登录</van-button>
+        <van-button class="btn" @click="step = 4" type="primary" block>重设登录密码</van-button>
       </div>
       <div class="step1" v-if="step===1">
         {{codeForm}}
@@ -83,13 +84,13 @@
         {{loginForm}}
         <van-form ref="loginForm">
           <van-field
-              v-model="loginForm.account"
+              v-model="loginForm.phone"
               type="text"
-              name="account"
+              name="phone"
               clearablel
-              label="手机号 / 用户名"
+              label="手机号"
               placeholder="请输入手机号码 / 用户名"
-              :rules="[{ required: true, message: '手机号码 / 用户名不能为空', trigger: 'blur', validator: notEmpty }]"
+              :rules="[{ required: true, message: '手机号码不能为空', trigger: 'blur', validator: notEmpty }]"
           />
           <van-field
               v-model="loginForm.pwd"
@@ -179,15 +180,18 @@ export default {
      * key: 1: 发送验证码 code 2: 新用户 3: 账号密码登录 4.重设密码
      */
     const operationMap = new Map([
+      [0, {title: '登录', leftText: '返回'}],
       [
-        1, {title: '发送验证码', leftText: '返回登录页'}
+        1, {title: '发送验证码', leftText: '返回'}
       ],
       [
         2, {title: '注册新用户', leftText: '返回发送验证码页'}
       ],
       [
-        3, {title: '账号密码登录', leftText: '返回登录页'}
-      ]
+        3, {title: '账号密码登录', leftText: '返回'}
+      ],
+      [
+        4, {title: '重设密码', leftText: '返回'}]
     ])
     return {
       step: 0, // 0: 初始状态 1: 发送登录/注册验证码 2: 新用户 3: 账号密码登录 4.发送忘记密码验证码
@@ -204,7 +208,7 @@ export default {
         viewPwd: false
       },
       loginForm: {
-        account: '',
+        phone: '',
         pwd: '',
         viewPwd: false
       },
@@ -224,12 +228,12 @@ export default {
     title() {
       const {step, operationMap: op} = this
       if (!step) return
-      return op.get(step).title
+      return op.get(step).title || ''
     },
     leftText() {
       const {step, operationMap: op} = this
       if (!step) return
-      return op.get(step).leftText
+      return op.get(step).leftText || ''
     }
   },
   created() {
@@ -259,7 +263,7 @@ export default {
               step === 3 ?
                   [
                     loginForm,
-                    () => ref['loginForm'].validate(form.usePwd ? 'account' : undefined),
+                    () => ref['loginForm'].validate(form.usePwd ? 'phone' : undefined),
                     (form) => phonePwdLogin(form)
                   ] :
                   step === 4 ?
@@ -280,9 +284,14 @@ export default {
                     return
                   }
                   this.setUserInfo(user)
-                  this.$socket.emit('login', {id: user.id})
+                  this.$socket.emit('login', {
+                    query: {
+                      userId: user.id
+                    }
+                  })
                   window.localStorage.setItem('userInfo', JSON.stringify(user))
-                  this.$router.push('Index')
+                  this.setShowTarBar(true)
+                  this.$router.push({path: '/', query: {}})
                 })
                 .catch(code => {
                 })

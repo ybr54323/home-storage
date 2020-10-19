@@ -4,6 +4,10 @@ import VueRouter from 'vue-router'
 import Index from './view/index'
 import Mine from './view/mine'
 import Login from './view/login'
+import Friend from './view/friend'
+import Search from './view/search'
+import AddFriend from './view/addFriend'
+import Profile from './view/profile'
 
 Vue.use(VueRouter)
 
@@ -31,6 +35,38 @@ const router = new VueRouter({
     meta: {
       title: '登录',
       requireLogin: false
+    }
+  }, {
+    path: '/friend',
+    name: 'Friend',
+    component: Friend,
+    meta: {
+      title: '通讯录',
+      requireLogin: true
+    }
+  }, {
+    path: '/search',
+    name: 'Search',
+    component: Search,
+    meta: {
+      title: '搜索',
+      requireLogin: true
+    }
+  }, {
+    path: '/add_friend',
+    name: 'AddFriend',
+    component: AddFriend,
+    meta: {
+      title: '添加好友',
+      requireLogin: true
+    }
+  }, {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      title: '详情',
+      requireLogin: true
     }
   }]
 })

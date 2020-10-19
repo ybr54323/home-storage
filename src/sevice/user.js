@@ -35,14 +35,10 @@ export function register({username, phone, code}) {
 
 
 // 获取重设密码的短信验证码
-export function getResetCode({phone, code}) {
+export function getResetCode({phone}) {
   return http({
     url: '/user/pwd_code/' + phone,
     method: 'get',
-    params: {
-      phone,
-      code
-    }
   })
 }
 
@@ -82,7 +78,14 @@ export function searchByPhone(phone) {
 // 通过用户名搜索用户
 export function searchByName(name) {
   return http({
-    url: '/user/' + name,
+    url: '/users/' + name,
     method: 'get',
+  })
+}
+
+export function getUserDetail(id) {
+  return http({
+    url: '/user/detail/' + id,
+    method: 'get'
   })
 }

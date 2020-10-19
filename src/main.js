@@ -15,7 +15,6 @@ Vue.use(new VueSocketIO({
   options: {
     query: {
       room: 'demo',
-      userId: `client_${Math.random()}`,
     },
   }
 }))
