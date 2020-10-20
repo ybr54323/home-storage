@@ -1,37 +1,42 @@
 <template>
-  <div class="profile-bar" @click="onClick($event, id)">
-    <img :src="avatarUrl" alt="avatar" class="img-avatar">
-    <span>{{name}}</span>
+  <div class="profile-bar" @click="onClick($event, profile.id)">
+    <img :src="profile.avatarUrl ||defaultUrl" alt="avatar" :class="[size===50?'img-avatar':'img-avatar-big']">
+    <span class="text-name">{{profile.name}}</span>
   </div>
 </template>
 
 <script>
+import url from '../assets/sand.jpg'
+
 export default {
   props: {
-    id: {},
-    avatarUrl: {
-      type: String,
+    profile: {
+      type: Object,
+      required: true,
       default() {
-        return '../assets/sand.jpg'
+        return {}
       }
     },
-    name: {
-      type: String,
+    size: {
+      type: Number,
       default() {
-        return 'name'
+        return 50
       }
     }
   },
   name: "profileBar",
   data() {
-    return {}
+    return {
+      defaultUrl: url
+    }
   },
   methods: {
     onClick(e) {
+      const {profile} = this
       this.$emit('profile-detail-click', {
-        id: this.id,
-        avatarUrl: this.avatarUrl,
-        name: this.name
+        id: profile.id,
+        avatarUrl: profile.avatarUrl,
+        name: profile.name
       })
     }
   }
@@ -51,4 +56,16 @@ export default {
   border-radius: 10px;
   object-fit: scale-down;
 }
+
+.img-avatar-big {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: scale-down;
+}
+
+.text-name {
+  margin: 0 0 0 10px;
+}
+
 </style>

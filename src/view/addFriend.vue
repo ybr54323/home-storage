@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <nav-bar></nav-bar>
     <van-search v-model="searchInput" placeholder="请输入用户手机号 / 用户名"/>
     <div class="con search-con" @click="searchByPhone" v-if="searchInput">
       <div class="icon-rect">
@@ -10,9 +11,7 @@
     <div class="con" v-if="done">
       <profile-bar
           v-if="res"
-          :id="res.id"
-          :avatar-url="res.avatar_url"
-          :name="res.name"
+          :profile="res"
           @profile-detail-click="onClick"
       ></profile-bar>
       <van-empty v-else description="没有搜索到"></van-empty>
@@ -24,6 +23,7 @@
 <script>
 import {searchByPhone, searchByName} from "@/sevice/user";
 import ProfileBar from '../components/profileBar'
+import NavBar from '../components/navBar'
 
 export default {
   name: "addFriend",
@@ -35,7 +35,8 @@ export default {
     }
   },
   components: {
-    ProfileBar
+    ProfileBar,
+    NavBar
   },
   methods: {
     searchByPhone() {
@@ -47,16 +48,11 @@ export default {
           })
           .catch()
     },
-    searchByName() {
-      searchByName(this.searchInput)
-          .then()
-          .catch()
-    },
     onClick(user) {
       this.$router.push({
         path: '/profile',
         query: {
-          type: 'user',
+          type: 2,
           ...user
         }
       })

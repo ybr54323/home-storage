@@ -1,59 +1,100 @@
 <template>
-  <div class="con">
-    <img src="" alt="avatar" class="img-avatar">
-    <span>{{name}}</span>
-    <div v-if="type==='user'">
-      <van-button block round type="primary">加为好友</van-button>
+  <div>
+    <nav-bar></nav-bar>
+    <div class="con">
+      <profile-bar :profile="profile" :size="50">
+      </profile-bar>
+      <div v-if="type===2">
+        <van-button class="btn" @click="addFriend" block round type="primary">加为好友</van-button>
+      </div>
+      <div v-if="type===3">
+        <van-button class="btn" block round type="primary">申请加入群组</van-button>
+      </div>
+      <!--      处理好友申请-->
+      <div v-if="type===4">
+        <van-button class="btn" @click="permitAddFriend" block round type="primary">通过</van-button>
+        <van-button class="btn" @click="rejectAddFriend" block round type="primary">拒绝</van-button>
+      </div>
+      <!--      处理群组申请-->
+      <div v-if="type===5">
+        <van-button class="btn" @click="permitAddGroup" block round type="primary">通过</van-button>
+        <van-button class="btn" @click="rejectAddGroup" block round type="primary">拒绝</van-button>
+      </div>
     </div>
-    <div v-if="type==='group'">
-      <van-button block round type="primary">申请加入群组</van-button>
-    </div>
+
   </div>
+
 </template>
 
 <script>
-import {getUserDetail} from '../sevice/user'
-import {message} from '../sevice/message'
+import url from '../assets/sand.jpg'
+import {
+  createChatMessage,
+  createFriendMessage,
+  createGroupMessage,
+  handleFriendMessage,
+  handleGroupMessage
+} from '@/sevice/message'
+import ProfileBar from '../components/profileBar'
+import NavBar from '../components/navBar'
+import {mapGetters} from 'vuex'
 
 export default {
   name: "profile",
   data() {
     return {
-      type: 'user',
-      profile: {}
+      // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请
+      type: 0,
+      profile: {},
     }
+  },
+  components: {
+    NavBar,
+    ProfileBar
   },
   created() {
     this.init()
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
-    getUserInfo() {
-    },
     init() {
       const {type, id, name, avatarUrl} = this.$route.query
-      this.type = type
+      this.type = +type
       this.profile = {
         id,
         name,
         avatarUrl
       }
     },
-    onAdd() {
+    permitAddFriend() {
+    },
+    rejectAddFriend() {
+    },
+    permitAddGroup() {
+
+    },
+    rejectAddGroup() {
+
+    },
+    addFriend() {
       // 1. 聊天消息 2.好友申请 3.群组邀请
-      const {type} = this
-      if (type === 2) {
-        const {id} = this.profile
-        message({
-          type,
-          id
-        })
-            .then(res => {
-              debugger
+      const {id} = this.profile
+      createFriendMessage({
+        target_user_id: id,
+      })
+          .then(res => {
+            debugger
+            this.$socket.emit('addFriend', {
+              query: {
+                source_user_id: this.userInfo.id,
+                target_user_id: id
+              }
             })
-            .catch()
-      } else if (type === 3) {
-        // TODO
-      }
+          })
+          .catch()
+
     }
   },
   mounted() {
@@ -63,5 +104,24 @@ export default {
 </script>
 
 <style scoped>
+.profile-box {
+  display: flex;
+  align-items: center;
+}
+
+.img-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: scale-down;
+}
+
+.text-name {
+  margin: 0 0 0 10px;
+}
+
+.btn {
+  margin: 10px 0;
+}
 
 </style>

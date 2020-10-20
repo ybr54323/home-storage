@@ -8,12 +8,16 @@ export default new Vuex.Store({
     userInfo: {
       id: '',
       name: '',
-      avatar: '',
+      avatarUrl: '',
       group: [],
       friend: [],
       good: [],
-      message: [],
-      socketId: '',
+      chatMessage: [],
+      friendMessage: [],
+      groupMessage: [],
+      chatUnread: 0,
+      friendUnread: 0,
+      groupUnread: 0
     },
     appStatus: {
       showTarBar: true
@@ -21,8 +25,10 @@ export default new Vuex.Store({
   },
   actions: {},
   mutations: {
-    setUserInfo(state, userInfo) {
-      state.userInfo = userInfo
+    setUserInfo(state, {id, name, avatar_url = ''}) {
+      state.userInfo.id = id
+      state.userInfo.name = name
+      state.userInfo.avatarUrl = avatar_url
     },
     setGroup(state, group) {
       state.userInfo.group = group
@@ -30,9 +36,27 @@ export default new Vuex.Store({
     setFriend(state, friend) {
       state.userInfo.friend = friend
     },
-    setMessage(state, message) {
-      state.userInfo.message = message
+    // 信息
+    setChatMessage(state, cM) {
+      state.userInfo.chatMessage = cM
     },
+    setFriendMessage(state, fM) {
+      state.userInfo.friendMessage = fM
+    },
+    setGroupMessage(state, gM) {
+      state.userInfo.groupMessage = gM
+    },
+    // 未读信息量
+    setChatUnread(state, num) {
+      state.userInfo.chatUnread = num
+    },
+    setFriendUnread(state, num) {
+      state.userInfo.friendUnread = num
+    },
+    setGroupUnread(state, num) {
+      state.userInfo.groupUnread = num
+    },
+
     setGood(state, good) {
       state.userInfo.good = good
     },
@@ -53,9 +77,27 @@ export default new Vuex.Store({
     friend(state) {
       return state.userInfo.friend
     },
-    message(state) {
-      return state.userInfo.message
+    // 信息
+    chatMessage(state) {
+      return state.userInfo.chatMessage
     },
+    friendMessage(state) {
+      return state.userInfo.friendMessage
+    },
+    groupMessage(state) {
+      return state.userInfo.groupMessage
+    },
+    // 未读信息量
+    chatUnread(state) {
+      return state.userInfo.chatUnread
+    },
+    friendUnread(state) {
+      return state.userInfo.friendUnread
+    },
+    groupUnread(state) {
+      return state.userInfo.groupUnread
+    },
+
     good(state) {
       return state.userInfo.good
     },

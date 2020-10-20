@@ -21,14 +21,15 @@ export function registerOrLogin({phone, code}) {
 }
 
 // 短信验证码 - 验证码通过 - 新用户 - 注册
-export function register({username, phone, code}) {
+export function register({username, phone, code, pwd}) {
   return http({
     url: '/user/register',
     method: 'post',
     data: {
       username,
       phone,
-      code
+      code,
+      pwd
     }
   })
 }

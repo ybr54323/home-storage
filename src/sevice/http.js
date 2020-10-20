@@ -56,8 +56,9 @@ service.interceptors.response.use(
     }
   },
   error => {
+    debugger
     Toast.clear();
-    Toast.fail(error.response.data.msg);
+    // Toast.fail(error.response.data.msg);
     return Promise.reject(error);
   }
 );

@@ -252,29 +252,29 @@ export default {
           [
             codeForm,
             () => ref['codeForm'].validate(),
-            (form) => registerOrLogin(form)
+            (f2) => registerOrLogin(f2)
           ] :
           step === 2 ?
               [
                 registerForm,
-                () => ref['registerForm'].validate(form.usePwd ? 'username' : undefined),
-                (form) => register(form)
+                (f1) => ref['registerForm'].validate(f1.usePwd ? undefined : 'username'),
+                (f2) => register(f2)
               ] :
               step === 3 ?
                   [
                     loginForm,
-                    () => ref['loginForm'].validate(form.usePwd ? 'phone' : undefined),
-                    (form) => phonePwdLogin(form)
+                    (f1) => ref['loginForm'].validate(f1.usePwd ? undefined : 'phone'),
+                    (f2) => phonePwdLogin(f2)
                   ] :
                   step === 4 ?
                       [
                         resetForm,
                         () => ref['resetForm'].validate(),
-                        (form) => resetPwd(form)
+                        (f2) => resetPwd(f2)
                       ] : [
                         null, null, null
                       ]
-      v()
+      v(form)
           .then(() => {
             api(form)
                 .then(res => {
