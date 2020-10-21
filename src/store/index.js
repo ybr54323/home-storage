@@ -41,6 +41,7 @@ export default new Vuex.Store({
       state.userInfo.chatMessage = cM
     },
     setFriendMessage(state, fM) {
+
       state.userInfo.friendMessage = fM
     },
     setGroupMessage(state, gM) {

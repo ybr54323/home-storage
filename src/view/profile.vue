@@ -20,6 +20,9 @@
         <van-button class="btn" @click="permitAddGroup" block round type="primary">通过</van-button>
         <van-button class="btn" @click="rejectAddGroup" block round type="primary">拒绝</van-button>
       </div>
+      <div v-if="type===6">
+        <van-button class="btn" @click="sendMessage" block round type="primary">发送消息</van-button>
+      </div>
     </div>
 
   </div>
@@ -43,7 +46,7 @@ export default {
   name: "profile",
   data() {
     return {
-      // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请
+      // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请 6. 发消息
       type: 0,
       profile: {},
     }
@@ -60,15 +63,31 @@ export default {
   },
   methods: {
     init() {
-      const {type, id, name, avatarUrl} = this.$route.query
+      const {type, id, name, avatarUrl, message_id} = this.$route.query
       this.type = +type
       this.profile = {
         id,
         name,
-        avatarUrl
+        avatarUrl,
+        message_id
       }
     },
+    // 6
+    sendMessage() {
+
+    },
     permitAddFriend() {
+      handleFriendMessage({
+        message_id: this.profile.message_id,
+        answer: 1,
+        source_user_id: this.profile.id
+      })
+          .then(res => {
+            const {code} = res
+            if (code === 200) {
+              this.type = 6
+            }
+          })
     },
     rejectAddFriend() {
     },
@@ -85,7 +104,7 @@ export default {
         target_user_id: id,
       })
           .then(res => {
-            debugger
+
             this.$socket.emit('addFriend', {
               query: {
                 source_user_id: this.userInfo.id,

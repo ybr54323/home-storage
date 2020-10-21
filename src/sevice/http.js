@@ -10,12 +10,24 @@ import router from '../router';
  * 500 后台代码错误
  */
 
+
+function getCookie(name) {
+  const kVC = document.cookie.split(';')
+  for (let i = 0; i < kVC.length; i++) {
+    const [key, v] = kVC[i].split('=')
+    if (key === name) {
+      return v
+    }
+  }
+  return null
+}
+
 axios.defaults.withCredentials = true // 允许跨域带cookie
 
 const service = axios.create({
   baseURL: 'http://localhost:7001',
   timeout: 30000, // 请求超时时间
-  withCredentials: true
+  withCredentials: true,
 });
 
 service.interceptors.request.use(
@@ -35,6 +47,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const {code, data, msg} = response.data
+    if (!service.defaults.headers['x-csrf-token']) {
+      service.defaults.headers['x-csrf-token'] = getCookie('csrfToken')
+    }
     Toast.clear();
     if (code === 200) {
       Toast.success(msg)
@@ -56,7 +71,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    debugger
+
     Toast.clear();
     // Toast.fail(error.response.data.msg);
     return Promise.reject(error);

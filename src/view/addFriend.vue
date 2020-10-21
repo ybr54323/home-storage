@@ -2,12 +2,12 @@
   <div class="">
     <nav-bar></nav-bar>
     <van-search v-model="searchInput" placeholder="请输入用户手机号 / 用户名"/>
-    <div class="con search-con" @click="searchByPhone" v-if="searchInput">
+    <van-cell @click="searchByPhone" v-if="searchInput">
       <div class="icon-rect">
         <van-icon name="search" size="25" color="#fff"/>
       </div>
       <span class="text-search">手机号搜索: </span> {{searchInput}}
-    </div>
+    </van-cell>
     <div class="con" v-if="done">
       <profile-bar
           v-if="res"
@@ -43,6 +43,7 @@ export default {
       searchByPhone(this.searchInput)
           .then(res => {
             const {data: {user}} = res
+
             this.done = 1
             this.res = user
           })

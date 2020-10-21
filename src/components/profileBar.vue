@@ -1,7 +1,8 @@
 <template>
-  <div class="profile-bar" @click="onClick($event, profile.id)">
+  <div class="profile-bar" @click="onClick">
     <img :src="profile.avatarUrl ||defaultUrl" alt="avatar" :class="[size===50?'img-avatar':'img-avatar-big']">
     <span class="text-name">{{profile.name}}</span>
+    <slot></slot>
   </div>
 </template>
 
@@ -33,10 +34,12 @@ export default {
   methods: {
     onClick(e) {
       const {profile} = this
+      debugger
       this.$emit('profile-detail-click', {
         id: profile.id,
         avatarUrl: profile.avatarUrl,
-        name: profile.name
+        name: profile.name,
+        message_id: profile.message_id
       })
     }
   }
@@ -47,7 +50,6 @@ export default {
 .profile-bar {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid gainsboro;
 }
 
 .img-avatar {
@@ -66,6 +68,7 @@ export default {
 
 .text-name {
   margin: 0 0 0 10px;
+  flex: 1;
 }
 
 </style>

@@ -8,6 +8,8 @@ import Friend from './view/friend'
 import Search from './view/search'
 import AddFriend from './view/addFriend'
 import Profile from './view/profile'
+import NewFriend from './view/newFriend'
+import NewGroup from './view/newGroup'
 
 Vue.use(VueRouter)
 
@@ -66,6 +68,22 @@ const router = new VueRouter({
     component: Profile,
     meta: {
       title: '详情',
+      requireLogin: true
+    }
+  }, {
+    path: '/new_friend',
+    name: 'NewFriend',
+    component: NewFriend,
+    meta: {
+      title: '新的好友',
+      requireLogin: true
+    }
+  }, {
+    path: '/new_group',
+    name: 'NewGroup',
+    component: NewGroup,
+    meta: {
+      title: '新建群组',
       requireLogin: true
     }
   }]

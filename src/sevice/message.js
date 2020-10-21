@@ -6,6 +6,8 @@ import http from "./http";
  * answer: 0.待处理 1.允许 2.拒绝
  * source_user_id 消息发起人id
  * target_user_id 消息接收人id
+ * source_user_is_read
+ * source_user_is_delete
  */
 
 // 创建消息
@@ -79,40 +81,50 @@ export function getGroupMessage() {
 // 查看聊天消息(已读)
 export function viewChatMessage() {
   return http({
-    url: '/message/chat',
-    method: 'put',
+    url: '/message/chat/view',
+    method: 'post',
   })
 }
 
 // 查看好友申请消息(已读)
 export function viewFriendMessage() {
   return http({
-    url: '/message/friend',
-    method: 'put',
+    url: '/message/friend/view',
+    method: 'post',
   })
 }
 
 // 查看群组申请消息(已读)
 export function viewGroupMessage() {
   return http({
-    url: '/message/group',
-    method: 'put',
+    url: '/message/group/view',
+    method: 'post',
   })
 }
 
 // 处理消息
 // 处理好友申请消息
-export function handleFriendMessage() {
+export function handleFriendMessage({message_id, source_user_id, answer}) {
   return http({
     url: '/message/friend/handle',
-    method: 'post'
+    method: 'post',
+    data: {
+      message_id,
+      answer,
+      source_user_id
+    }
   })
 }
 
 // 处理群组申请消息
-export function handleGroupMessage() {
+export function handleGroupMessage({message_id, source_user_id, answer}) {
   return http({
     url: '/message/group/handle',
-    method: 'post'
+    method: 'post',
+    data: {
+      message_id,
+      answer,
+      source_user_id
+    }
   })
 }
