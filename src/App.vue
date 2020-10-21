@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {
   getAllMessage,
   getChatMessage,
   getFriendMessage,
   getGroupMessage,
 } from "@/sevice/message";
-import {getFriend} from "@/sevice/friend";
 
 export default {
   name: 'App',
@@ -52,7 +51,7 @@ export default {
       handler(curPath, oldPath) {
         if (curPath === oldPath) return
         if (curPath === '/') {
-          this.getAllMessage()
+          this.getFriendMessage()
           this.getFriend()
         }
       },
@@ -73,6 +72,10 @@ export default {
     ]),
   },
   methods: {
+    ...mapActions([
+      'getFriend',
+      'getFriendMessage',
+    ]),
     ...mapMutations([
       'setShowTarBar',
       'setChatMessage',
@@ -94,36 +97,6 @@ export default {
         }
       }
     },
-    getFriend() {
-      getFriend()
-          .then(res => {
-            debugger
-            const {data: {friend}} = res
-            this.setFriend(friend)
-          })
-          .catch()
-    },
-    getAllMessage() {
-      const unreadCount = (messages) => {
-        let count = 0
-        messages.forEach(message => {
-          message.target_user_is_read === 0 && count++
-        })
-        return count
-      }
-      // getChatMessage()
-      //     .then(res => {
-      //       const {chatMessage} = res
-      //       this.setChatMessage(chatMessage)
-      //       this.setFriendUnread(unreadCount(chatMessage))
-      //     })
-      getFriendMessage()
-          .then(res => {
-            const {data: {friendMessage}} = res
-            this.setFriendMessage(friendMessage)
-            this.setFriendUnread(unreadCount(friendMessage))
-          })
-    },
   },
   sockets: {
     connect() {
@@ -137,6 +110,9 @@ export default {
         switch (type) {
           case 'addFriend':
             this.setFriendUnread(++this.friendUnread)
+            break
+          case 'addGroup':
+            this.setGroupUnread(++this.groupUnread)
             break
         }
       })

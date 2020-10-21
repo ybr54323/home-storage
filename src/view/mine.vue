@@ -3,7 +3,6 @@
     <nav-bar></nav-bar>
     <div class="con">
       <profile-bar :profile="userInfo" :size="100"></profile-bar>
-
     </div>
   </div>
 </template>

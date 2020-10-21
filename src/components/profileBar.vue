@@ -1,6 +1,16 @@
 <template>
   <div class="profile-bar" @click="onClick">
-    <img :src="profile.avatarUrl ||defaultUrl" alt="avatar" :class="[size===50?'img-avatar':'img-avatar-big']">
+    <van-image
+        :src="profile.avatarUrl ||defaultUrl" alt="avatar"
+        :width="size"
+        :height="size"
+        lazy-load
+        fit="scale-down"
+    >
+      <template v-slot:loading>
+        <van-loading type="spinner" size="20"/>
+      </template>
+    </van-image>
     <span class="text-name">{{profile.name}}</span>
     <slot></slot>
   </div>

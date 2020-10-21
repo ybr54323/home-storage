@@ -1,7 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {getFriend} from "@/sevice/friend";
+import {getChatMessage, getFriendMessage, getGroupMessage} from "@/sevice/message";
 
 Vue.use(Vuex);
+
+const unreadCount = (messages) => {
+  let count = 0
+  messages.forEach(message => {
+    message.target_user_is_read === 0 && count++
+  })
+  return count
+}
 
 export default new Vuex.Store({
   state: {
@@ -23,7 +33,40 @@ export default new Vuex.Store({
       showTarBar: true
     }
   },
-  actions: {},
+  actions: {
+    getFriend({state, commit}) {
+      getFriend()
+        .then(res => {
+          const {data: {friend}} = res
+          commit('setFriend', friend)
+        })
+    },
+    getChatMessage({state, commit}) {
+      getChatMessage()
+        .then(res => {
+          const {data: {chatMessage}} = res
+          commit('setFriendMessage', chatMessage)
+          commit('setFriendUnread', unreadCount(chatMessage))
+        })
+    },
+    getFriendMessage({state, commit}) {
+      getFriendMessage()
+        .then(res => {
+          const {data: {friendMessage}} = res
+          commit('setFriendMessage', friendMessage)
+          commit('setFriendUnread', unreadCount(friendMessage))
+        })
+    },
+    getGroupMessage({state, commit}) {
+      getGroupMessage()
+        .then(res => {
+          const {data: {groupMessage}} = res
+          commit('setFriendMessage', groupMessage)
+          commit('setFriendUnread', unreadCount(groupMessage))
+        })
+    },
+
+  },
   mutations: {
     setUserInfo(state, {id, name, avatar_url = ''}) {
       state.userInfo.id = id

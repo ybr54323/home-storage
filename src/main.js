@@ -5,7 +5,11 @@ import VueSocketIO from 'vue-socket.io'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css';
+import {Lazyload} from 'vant';
 
+Vue.use(Lazyload, {
+  lazyComponent: true,
+});
 import router from "./router";
 
 Vue.use(Vant)

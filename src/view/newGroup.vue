@@ -30,7 +30,6 @@
                         @oversize="onOversize"
                         :after-read="afterRead"
           />
-
         </van-cell>
         <van-field name="switch" label="邀请好友">
           <template #input>
@@ -69,7 +68,7 @@
 <script>
 import NavBar from '../components/navBar'
 import ProfileBar from '../components/profileBar'
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {Toast} from "vant";
 
 export default {
@@ -96,15 +95,22 @@ export default {
       'friend'
     ])
   },
+  created() {
+    this.getFriend()
+  },
   methods: {
+    ...mapActions([
+      'getFriend'
+    ]),
     afterRead(file) {
-      file.status = 'uploading';
-      file.message = '上传中...';
-
-      setTimeout(() => {
-        file.status = 'failed';
-        file.message = '上传失败';
-      }, 1000);
+      console.log(file)
+      // file.status = 'uploading';
+      // file.message = '上传中...';
+      //
+      // setTimeout(() => {
+      //   file.status = 'failed';
+      //   file.message = '上传失败';
+      // }, 1000);
     },
     toggle(index) {
       this.$refs.checkboxes[index].toggle();

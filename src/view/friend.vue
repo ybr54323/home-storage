@@ -34,7 +34,7 @@
 <script>
 import NavBar from '../components/navBar'
 import ProfileBar from '../components/profileBar'
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {viewChatMessage, viewFriendMessage, viewGroupMessage} from "@/sevice/message";
 import {getFriend} from "@/sevice/friend";
 
@@ -59,19 +59,13 @@ export default {
     this.getFriend()
   },
   methods: {
+    ...mapActions([
+      'getFriend'
+    ]),
     ...mapMutations([
       'setFriend'
     ]),
     onChat(profile) {
-    },
-    getFriend() {
-      getFriend()
-          .then(res => {
-            debugger
-            const {data: {friend}} = res
-            this.setFriend(friend)
-          })
-          .catch()
     },
     onClickRight() {
       this.$router.push({path: '/add_friend'})
