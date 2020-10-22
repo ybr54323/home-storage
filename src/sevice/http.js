@@ -2,7 +2,6 @@ import axios from 'axios';
 import {Toast, Dialog} from 'vant';
 import store from '../store/index'
 import router from '../router';
-
 /**
  * 401 未登录 - 跳到登录页
  * 402 参数错误 - 当前页处理
@@ -56,13 +55,12 @@ service.interceptors.response.use(
       return Promise.resolve({code, data, msg})
     }
     if (code === 401) {
-      store.commit('setShowTarBar', false)
-      // router.push({
-      //   name: 'login',
-      //   query: {step: 0}
-      // })
-      // window.history.href = window.location.host + '/#/login?step=0'
       Toast.fail(msg)
+      router.push({
+        path: '/login',
+        query: {step: 0}
+      })
+      // window.history.href = window.location.host + '/#/login?step=0'
       return Promise.reject(code)
     }
     if (code === 402 || code === 500) {

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getFriend} from "@/sevice/friend";
+import {getGroup} from "@/sevice/group";
 import {getChatMessage, getFriendMessage, getGroupMessage} from "@/sevice/message";
 
 Vue.use(Vuex);
@@ -41,6 +42,13 @@ export default new Vuex.Store({
           commit('setFriend', friend)
         })
     },
+    getGroup({state, commit}) {
+      getGroup()
+        .then(res => {
+          const {data: {group}} = res
+          commit('setGroup', group)
+        })
+    },
     getChatMessage({state, commit}) {
       getChatMessage()
         .then(res => {
@@ -61,11 +69,10 @@ export default new Vuex.Store({
       getGroupMessage()
         .then(res => {
           const {data: {groupMessage}} = res
-          commit('setFriendMessage', groupMessage)
-          commit('setFriendUnread', unreadCount(groupMessage))
+          commit('setGroupMessage', groupMessage)
+          commit('setGroupUnread', unreadCount(groupMessage))
         })
     },
-
   },
   mutations: {
     setUserInfo(state, {id, name, avatar_url = ''}) {

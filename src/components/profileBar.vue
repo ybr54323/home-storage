@@ -42,9 +42,8 @@ export default {
     }
   },
   methods: {
-    onClick(e) {
+    onClick() {
       const {profile} = this
-      debugger
       this.$emit('profile-detail-click', {
         id: profile.id,
         avatarUrl: profile.avatarUrl,

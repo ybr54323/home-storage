@@ -71,10 +71,10 @@ export default {
       this.$router.push({path: '/add_friend'})
     },
     viewNewFriendApply() {
-      this.$router.push({path: '/new_friend', query: {type: 1}})
+      this.$router.push({path: '/pending_page', query: {type: 1}})
     },
     viewNewGroupApply() {
-      this.$router.push({path: '/new_friend', query: {type: 2}})
+      this.$router.push({path: '/pending_page', query: {type: 2}})
     }
   }
 

@@ -2,6 +2,9 @@
   <div>
     <nav-bar></nav-bar>
     <div class="con">
+      friendMessage
+      <br>
+      {{friendMessage}}
       <div v-if="type===1">
         <div class="op-con" v-for="message in friendMessage" :key="message.id">
           <profile-bar :profile="{
@@ -10,13 +13,16 @@
           avatarUrl: message.source_user_avatar_url,
           message_id: message.id
         }"
-                       @profile-detail-click="onViewDetail"
+                       @profile-detail-click="onViewFriendDetail"
           >
             <span class="text-desc">等待验证</span>
           </profile-bar>
         </div>
       </div>
-      <div v-else-if="type===2">
+      groupMessage
+      <br>
+      {{groupMessage}}
+      <div v-if="type===2">
         <div class="op-con" v-for="message in groupMessage" :key="message.id">
           <profile-bar :profile="{
           id: message.group_id,
@@ -24,9 +30,20 @@
           avatarUrl: message.group_avatar,
           message_id: message.id
         }"
-                       @profile-detail-click="onViewDetail"
+                       @profile-detail-click="onViewGroupDetail"
           >
-            <span class="text-desc">等待验证</span>
+            <div>
+              <profile-bar :profile="{
+              id: message.source_user_id,
+              name: message.source_user_name,
+              avatarUrl: message.source_user_avatar_url,
+              message_id: message.id
+              }"
+                           :size="30"
+              >
+                邀请您加入
+              </profile-bar>
+            </div>
           </profile-bar>
         </div>
 
@@ -52,6 +69,7 @@ export default {
   created() {
     const {query: {type}} = this.$route
     this.type = +type
+    this.$route.meta.title = this.type === 2 ? '待通过的群组邀请申请' : this.type === 1 ? '待通过的好友申请邀请' : ''
     this.init()
   },
   components: {
@@ -67,9 +85,12 @@ export default {
     ])
   },
   methods: {
-    onViewDetail(user) {
+    onViewGroupDetail(group) {
+      const {id, name, avatarUrl, message_id} = group
+      this.$router.push({path: '/profile', query: {id, name, avatarUrl, message_id, type: 5}})
+    },
+    onViewFriendDetail(user) {
       const {id, name, avatarUrl, message_id} = user
-
       this.$router.push({path: '/profile', query: {id, name, avatarUrl, message_id, type: 4}})
     },
     viewFriendMessage() {

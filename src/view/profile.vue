@@ -12,12 +12,12 @@
       </div>
       <!--      处理好友申请-->
       <div v-if="type===4">
-        <van-button class="btn" @click="permitAddFriend" block round type="primary">通过</van-button>
+        <van-button class="btn" @click="permitAddFriend" block round type="primary">通过好友申请</van-button>
         <van-button class="btn" @click="rejectAddFriend" block round type="primary">拒绝</van-button>
       </div>
       <!--      处理群组申请-->
       <div v-if="type===5">
-        <van-button class="btn" @click="permitAddGroup" block round type="primary">通过</van-button>
+        <van-button class="btn" @click="permitAddGroup" block round type="primary">同意群组邀请</van-button>
         <van-button class="btn" @click="rejectAddGroup" block round type="primary">拒绝</van-button>
       </div>
       <div v-if="type===6">

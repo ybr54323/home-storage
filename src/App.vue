@@ -29,6 +29,7 @@ import {
   getFriendMessage,
   getGroupMessage,
 } from "@/sevice/message";
+import {getAssumeRole} from "@/sevice/oss";
 
 export default {
   name: 'App',
@@ -53,6 +54,8 @@ export default {
         if (curPath === '/') {
           this.getFriendMessage()
           this.getFriend()
+          this.getGroup()
+          this.getGroupMessage()
         }
       },
       immediate: true
@@ -75,6 +78,8 @@ export default {
     ...mapActions([
       'getFriend',
       'getFriendMessage',
+      'getGroup',
+      'getGroupMessage'
     ]),
     ...mapMutations([
       'setShowTarBar',

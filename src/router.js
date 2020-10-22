@@ -8,7 +8,7 @@ import Friend from './view/friend'
 import Search from './view/search'
 import AddFriend from './view/addFriend'
 import Profile from './view/profile'
-import NewFriend from './view/newFriend'
+import PendingPage from './view/pendingPage'
 import NewGroup from './view/newGroup'
 
 Vue.use(VueRouter)
@@ -71,11 +71,11 @@ const router = new VueRouter({
       requireLogin: true
     }
   }, {
-    path: '/new_friend',
-    name: 'NewFriend',
-    component: NewFriend,
+    path: '/pending_page',
+    name: 'PendingPage',
+    component: PendingPage,
     meta: {
-      title: '新的好友',
+      title: '',
       requireLogin: true
     }
   }, {
@@ -97,6 +97,7 @@ router.beforeEach((to, from, next) => {
     })
   } else next()
 })
-
+router.afterEach((to, from) => {
+})
 export default router
 
