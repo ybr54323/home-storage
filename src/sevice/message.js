@@ -117,11 +117,12 @@ export function handleFriendMessage({message_id, source_user_id, answer}) {
 }
 
 // 处理群组申请消息
-export function handleGroupMessage({message_id, source_user_id, answer}) {
+export function handleGroupMessage({message_id, group_id, source_user_id, answer}) {
   return http({
     url: '/message/group/handle',
     method: 'post',
     data: {
+      group_id,
       message_id,
       answer,
       source_user_id

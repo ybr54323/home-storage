@@ -10,6 +10,9 @@ import AddFriend from './view/addFriend'
 import Profile from './view/profile'
 import PendingPage from './view/pendingPage'
 import NewGroup from './view/newGroup'
+import Group from './view/group'
+import ChatRoom from './view/chatRoom'
+import NewGood from './view/newGood'
 
 Vue.use(VueRouter)
 
@@ -86,6 +89,37 @@ const router = new VueRouter({
       title: '新建群组',
       requireLogin: true
     }
+  }, {
+    path: '/group',
+    name: 'Group',
+    component: Group,
+    meta: {
+      title: '你的空间',
+      requireLogin: true
+    }
+
+  }, {
+    path: '/chat_room',
+    name: 'ChatRoom',
+    component: ChatRoom,
+    meta: {
+      title: '聊天',
+      requireLogin: true
+    }
+
+    ,
+  }, {
+
+    path: '/new_good',
+    name: 'NewGood',
+    component: NewGood,
+    meta: {
+      title: '创建物品',
+      requireLogin: true
+    }
+
+    ,
+
   }]
 })
 router.beforeEach((to, from, next) => {

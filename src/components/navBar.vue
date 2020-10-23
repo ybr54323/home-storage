@@ -16,7 +16,7 @@ export default {
     title: {
       type: String,
       default() {
-        return this.$route.meta.title
+        return ''
       }
     },
     rightText: {

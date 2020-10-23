@@ -1,20 +1,47 @@
 <template>
   <div id="app">
-    {{userInfo}}
-    <br>
-    friendUnread:
-    <br>
-    {{friendUnread}}
-    <br>
-    friendMessage:
-    <br>
-    {{friendMessage}}
-    <br>
-    friend
-    {{friend}}
-    <router-view></router-view>
-    <van-tabbar v-if="hasTabBarRoute.indexOf($route.path)>=0" route active-color="#07c160" inactive-color="#000">
+    <!--    <h1>id</h1>-->
+    <!--    <h2>{{userInfo.id}}</h2>-->
+    <!--    <h1>friendUnread</h1>-->
+    <!--    <h2>{{friendUnread}}</h2>-->
+    <!--    <h1>friend</h1>-->
+    <!--    <h2>{{friend}}</h2>-->
+    <!--    <h1>friendMessage</h1>-->
+    <!--    <h2>{{friendMessage}}</h2>-->
+    <!--    <h1>group</h1>-->
+    <!--    <h2>{{group}}</h2>-->
+    <!--    <h1>groupMessage</h1>-->
+    <!--    <h2>{{groupMessage}}</h2>-->
+    <!--        顶栏-->
+    <nav-bar
+        v-if="hasNavBar"
+        :title="$route.meta.title"
+        :on-click-right="operationMap.get($route.path).onClickRight || void 0"
+        :right-text="operationMap.get($route.path).rightText || void 0"
+        slot="nav-bar"></nav-bar>
+    <!--        滚动通知-->
+    <van-notice-bar
+        v-if="notice && hasNotice"
+        slot="notice"
+        left-icon="volume-o"
+        :text="notice"
+    />
+    <!--    <transition name="van-fade">-->
+    <router-view>
+    </router-view>
+    <!--    </transition>-->
+    <!--    左侧弹窗-->
+    <van-popup
+        v-model="showPopUp"
+        position="left"
+        :style="{ width: '30%', height: '100vh'}"
+    >
+      <van-cell title="新建群组" @click="newGroup"></van-cell>
+      <van-cell title="新建物品" @click="newGood"></van-cell>
+    </van-popup>
+    <van-tabbar v-if="hasTabBar" route active-color="#07c160" inactive-color="#000">
       <van-tabbar-item to="/" replace icon="home-o">首页</van-tabbar-item>
+      <van-tabbar-item to="/group" icon="send-gift-o" :badge="groupUnread || null">你的空间</van-tabbar-item>
       <van-tabbar-item to="/friend" icon="friends-o" :badge="friendUnread || null">通讯录</van-tabbar-item>
       <van-tabbar-item to="/mine" replace icon="friends-o">个人</van-tabbar-item>
     </van-tabbar>
@@ -23,25 +50,49 @@
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
-import {
-  getAllMessage,
-  getChatMessage,
-  getFriendMessage,
-  getGroupMessage,
-} from "@/sevice/message";
-import {getAssumeRole} from "@/sevice/oss";
+import NavBar from './components/navBar'
 
 export default {
   name: 'App',
   data() {
     const hasTabBarRoute = [
       '/',
+      '/group',
       '/friend',
       '/mine',
     ]
+    const operationMap = new Map([
+      ['/', {
+        rightText: '+', onClickRight: () => {
+          this.showPopUp = true
+        }
+      }],
+      ['/group', {}],
+      ['/friend', {
+        rightText: '搜索好友', onClickRight: () => {
+          this.$router.push({path: '/add_friend'})
+        }
+      }],
+      ['/mine', {}],
+      ['/login', {}],
+      ['/search', {}],
+      ['/add_friend', {}],
+      ['/profile', {}],
+      ['/pending_page', {}],
+      ['/new_group', {}],
+      ['/chat_room', {}],
+      ['/new_good', {}]
+
+    ])
     return {
+
       hasTabBarRoute,
+      showPopUp: false, // 左侧弹
+      operationMap, // 操作map
     }
+  },
+  components: {
+    NavBar
   },
   created() {
     this.setShowTarBar(true)
@@ -51,12 +102,14 @@ export default {
     '$route.path': {
       handler(curPath, oldPath) {
         if (curPath === oldPath) return
-        if (curPath === '/') {
-          this.getFriendMessage()
-          this.getFriend()
-          this.getGroup()
-          this.getGroupMessage()
-        }
+        if (curPath === '/login') return
+        // if (curPath === '/') {
+        this.getFriendMessage()
+        this.getFriend()
+        this.getGroupMessage()
+        this.getGroup()
+        this.getUserGood()
+        // }
       },
       immediate: true
     }
@@ -71,15 +124,28 @@ export default {
       'friendUnread',
       'groupUnread',
       'friendMessage',
-      'friend'
+      'groupMessage',
+      'friend',
+      'group',
+      'notice',
     ]),
+    hasNavBar() {
+      return !/^\/login.*/.test(this.$route.path)
+    },
+    hasNotice() {
+      return !/^\/login.*/.test(this.$route.path)
+    },
+    hasTabBar() {
+      return this.hasTabBarRoute.indexOf(this.$route.path) >= 0
+    }
   },
   methods: {
     ...mapActions([
       'getFriend',
       'getFriendMessage',
       'getGroup',
-      'getGroupMessage'
+      'getGroupMessage',
+      'getUserGood', // 获取用户自己的物品
     ]),
     ...mapMutations([
       'setShowTarBar',
@@ -90,8 +156,20 @@ export default {
       'setFriendUnread',
       'setGroupUnread',
       'setUserInfo',
-      'setFriend'
+      'setFriend',
+      'setNotice'
     ]),
+    newGood() {
+      this.$router.push({path: '/new_good'})
+      this.showPopUp = false
+    },
+    newGroup() {
+      this.$router.push({path: '/new_group'})
+      this.showPopUp = false
+    },
+    bindEnter() {
+
+    },
     auth() {
       if (!this.userInfo.id && !localStorage.getItem('userInfo')) {
         this.$router.push({path: '/login'})
@@ -110,14 +188,21 @@ export default {
       console.log('#connect,', client, sk);
 
       // 监听自身 id 以实现 p2p 通讯
-      this.sockets.subscribe(client, msg => {
-        const {query: {type}} = msg
+      this.sockets.subscribe(client, sockMsg => {
+        const {query: {type, msg}} = sockMsg
         switch (type) {
           case 'addFriend':
             this.setFriendUnread(++this.friendUnread)
             break
           case 'addGroup':
             this.setGroupUnread(++this.groupUnread)
+            break
+          case 'permitJoinGroup':
+            this.setNotice(msg)
+            // const {query: {target_user_id}}
+            break
+          case 'rejectJoinGroup':
+            this.setNotice(msg)
             break
         }
       })
@@ -140,4 +225,7 @@ export default {
 <style>
 @import "./common/css/common.css";
 
+#app {
+  padding-bottom: 50px;
+}
 </style>

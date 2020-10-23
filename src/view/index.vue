@@ -1,44 +1,45 @@
 <template>
   <div>
-    <nav-bar :on-click-right="onClickRight" :right-text="'+'">
-    </nav-bar>
+    <slot name="nav-bar"></slot>
+    <slot name="notice"></slot>
     <div class="con">
-      <van-popup
-          v-model="show"
-          position="left"
-          :style="{ width: '30%', height: '100vh'}"
-      >
-        <van-cell title="新建群组" @click="newGroup"></van-cell>
-      </van-popup>
+      <div class="good-bar">
+        {{userGood}}
+        <profile-bar v-for="g in userGood" :key="g.id" :profile="{
+          id: g.id,
+          name: g.name,
+          avatarUrl: g.good_avatar_url,
+          des: g.des
+        }">
+        </profile-bar>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import NavBar from '../components/navBar'
+import {mapGetters} from 'vuex'
+import ProfileBar from '../components/profileBar'
 
 export default {
   name: "Index",
   data() {
     return {
       show: false,
-
       active: 'home'
     }
   },
   components: {
-    NavBar
+    ProfileBar
   },
   created() {
   },
-  methods: {
-    onClickRight() {
-      this.show = true
-    },
-    newGroup() {
-      this.$router.push({path: '/new_group'})
-    }
-  }
+  computed: {
+    ...mapGetters([
+      'userGood'
+    ])
+  },
+  methods: {}
 }
 </script>
 

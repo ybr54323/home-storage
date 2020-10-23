@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getFriend} from "@/sevice/friend";
-import {getGroup} from "@/sevice/group";
+import {getGroup} from "@/sevice/userGroup";
 import {getChatMessage, getFriendMessage, getGroupMessage} from "@/sevice/message";
+import {getUserGood} from "@/sevice/good";
 
 Vue.use(Vuex);
 
@@ -28,7 +29,8 @@ export default new Vuex.Store({
       groupMessage: [],
       chatUnread: 0,
       friendUnread: 0,
-      groupUnread: 0
+      groupUnread: 0,
+      notice: ''
     },
     appStatus: {
       showTarBar: true
@@ -73,6 +75,13 @@ export default new Vuex.Store({
           commit('setGroupUnread', unreadCount(groupMessage))
         })
     },
+    getUserGood({state, commit}) {
+      getUserGood()
+        .then(res => {
+          const {data: {good}} = res
+          commit('setUserGood', good)
+        })
+    }
   },
   mutations: {
     setUserInfo(state, {id, name, avatar_url = ''}) {
@@ -107,8 +116,7 @@ export default new Vuex.Store({
     setGroupUnread(state, num) {
       state.userInfo.groupUnread = num
     },
-
-    setGood(state, good) {
+    setUserGood(state, good) {
       state.userInfo.good = good
     },
     setSocketId(state, socketId) {
@@ -116,6 +124,9 @@ export default new Vuex.Store({
     },
     setShowTarBar(state, status) {
       state.appStatus.showTarBar = !!status
+    },
+    setNotice(state, notice) {
+      state.userInfo.notice = notice
     }
   },
   getters: {
@@ -149,7 +160,7 @@ export default new Vuex.Store({
       return state.userInfo.groupUnread
     },
 
-    good(state) {
+    userGood(state) {
       return state.userInfo.good
     },
     socketId(state) {
@@ -157,6 +168,9 @@ export default new Vuex.Store({
     },
     appStatus(state) {
       return state.appStatus
+    },
+    notice(state) {
+      return state.userInfo.notice
     }
   }
 });

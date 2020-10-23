@@ -1,6 +1,7 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <slot name="nav-bar"></slot>
+    <slot name="notice"></slot>
     <div class="con">
       <profile-bar :profile="userInfo" :size="100"></profile-bar>
     </div>
@@ -9,7 +10,6 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import NavBar from '../components/navBar'
 import ProfileBar from '../components/profileBar'
 
 export default {
@@ -23,7 +23,6 @@ export default {
     ...mapGetters(['userInfo'])
   },
   components: {
-    NavBar,
     ProfileBar
   }
 }

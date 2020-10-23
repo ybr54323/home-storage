@@ -1,17 +1,15 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <slot name="nav-bar"></slot>
+    <slot name="notice"></slot>
     <div class="con">
-      friendMessage
-      <br>
-      {{friendMessage}}
       <div v-if="type===1">
         <div class="op-con" v-for="message in friendMessage" :key="message.id">
           <profile-bar :profile="{
           id: message.source_user_id,
           name: message.source_user_name,
           avatarUrl: message.source_user_avatar_url,
-          message_id: message.id
+          messageId: message.id
         }"
                        @profile-detail-click="onViewFriendDetail"
           >
@@ -19,16 +17,16 @@
           </profile-bar>
         </div>
       </div>
-      groupMessage
-      <br>
-      {{groupMessage}}
       <div v-if="type===2">
         <div class="op-con" v-for="message in groupMessage" :key="message.id">
           <profile-bar :profile="{
           id: message.group_id,
           name: message.group_name,
           avatarUrl: message.group_avatar,
-          message_id: message.id
+          messageId: message.id,
+          sourceUserId: message.source_user_id,
+          sourceUserAvatar: message.source_user_avatar_url,
+          sourceUserName: message.source_user_name
         }"
                        @profile-detail-click="onViewGroupDetail"
           >
@@ -37,7 +35,7 @@
               id: message.source_user_id,
               name: message.source_user_name,
               avatarUrl: message.source_user_avatar_url,
-              message_id: message.id
+              messageId: message.id
               }"
                            :size="30"
               >
@@ -53,7 +51,6 @@
 </template>
 
 <script>
-import NavBar from '../components/navBar'
 import ProfileBar from "@/components/profileBar";
 import {mapGetters} from 'vuex'
 import {viewFriendMessage} from "@/sevice/message";
@@ -73,7 +70,6 @@ export default {
     this.init()
   },
   components: {
-    NavBar,
     ProfileBar
   },
   computed: {
@@ -86,12 +82,16 @@ export default {
   },
   methods: {
     onViewGroupDetail(group) {
-      const {id, name, avatarUrl, message_id} = group
-      this.$router.push({path: '/profile', query: {id, name, avatarUrl, message_id, type: 5}})
+      // id -> group_id
+      const {id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatar} = group;
+      this.$router.push({
+        path: '/profile',
+        query: {id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatar, type: 5}
+      })
     },
     onViewFriendDetail(user) {
-      const {id, name, avatarUrl, message_id} = user
-      this.$router.push({path: '/profile', query: {id, name, avatarUrl, message_id, type: 4}})
+      const {id, name, avatarUrl, messageId} = user
+      this.$router.push({path: '/profile', query: {id, name, avatarUrl, messageId, type: 4}})
     },
     viewFriendMessage() {
       viewFriendMessage()

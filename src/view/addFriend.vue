@@ -1,6 +1,7 @@
 <template>
   <div class="">
-    <nav-bar></nav-bar>
+    <slot name="nav-bar"></slot>
+    <slot name="notice"></slot>
     <van-search v-model="searchInput" placeholder="请输入用户手机号 / 用户名"/>
     <van-cell @click="searchByPhone" v-if="searchInput">
       <div class="icon-rect">
@@ -23,7 +24,7 @@
 <script>
 import {searchByPhone, searchByName} from "@/sevice/user";
 import ProfileBar from '../components/profileBar'
-import NavBar from '../components/navBar'
+import {mapGetters} from 'vuex'
 
 export default {
   name: "addFriend",
@@ -36,7 +37,12 @@ export default {
   },
   components: {
     ProfileBar,
-    NavBar
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo',
+      'friend'
+    ])
   },
   methods: {
     searchByPhone() {
@@ -50,13 +56,37 @@ export default {
           .catch()
     },
     onClick(user) {
+      const {id} = user
+      // 检查是否为自己
+      const isMe = this.userInfo.id === id
+      // 检查是否已经为好友
+      const isFriend = this.friend.some(f => {
+        return f.id === id
+      })
+      if (isMe) {
+        this.$router.push({
+          path: '/mine'
+        })
+        return
+      }
+      if (isFriend) {
+        this.$router.push({
+          path: '/profile',
+          query: {
+            type: '6',
+            ...user
+          }
+        })
+        return
+      }
       this.$router.push({
         path: '/profile',
         query: {
-          type: 2,
+          type: '2',
           ...user
         }
       })
+
     }
   }
 }

@@ -6,6 +6,7 @@ import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css';
 import {Lazyload} from 'vant';
+
 Vue.use(Lazyload, {
   lazyComponent: true,
 });

@@ -3,22 +3,27 @@
     <slot name="nav-bar"></slot>
     <slot name="notice"></slot>
     <div class="con">
-      <van-cell class="search-con" @click="viewNewFriendApply">
+      <van-cell class="search-con" @click="viewNewGroupApply">
         <div class="icon-rect">
-          <van-icon name="friends-o" size="25" :badge="friendUnread||null" color="#fff"/>
+          <van-icon name="home-o" size="25" :badge="groupUnread||null" color="#fff"/>
         </div>
-        <span class="text-search">新的朋友</span>
+        <span class="text-search">新的群组</span>
       </van-cell>
       <br>
-      <profile-bar
-          v-for="f in friend" :key="f.id"
-          :profile="{
+      <template v-if="group.length">
+        <profile-bar
+            v-for="f in group" :key="f.id"
+            :profile="{
               id: f.id,
               name: f.name,
-              avatarUrl: f.avatar_url
+              avatarUrl: f.group_avatar_url,
             }"
-          @profile-detail-click="onChat"
-      ></profile-bar>
+            @profile-detail-click="viewGroupProfile"
+        ></profile-bar>
+      </template>
+      <template v-else>
+        <van-empty description="暂无空间"/>
+      </template>
     </div>
   </div>
 </template>
@@ -36,16 +41,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'friendUnread',
-      'friendMessage',
-      'friend'
+      'groupUnread',
+      'group'
     ])
   },
   components: {
     ProfileBar
   },
   created() {
-    this.getFriend()
   },
   methods: {
     ...mapActions([
@@ -54,9 +57,17 @@ export default {
     ...mapMutations([
       'setFriend'
     ]),
-    onChat(profile) {
+    // 查看空间详情
+    viewGroupProfile(profile) {
+      const {id, name, avatarUrl} = profile;
       this.$router.push({
-        path: '/chat_room', query: {}
+        path: 'profile',
+        query: {
+          type: '7',
+          id,
+          name,
+          avatarUrl
+        }
       })
     },
     onClickRight() {

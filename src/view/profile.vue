@@ -1,9 +1,11 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <slot name="nav-bar"></slot>
+    <slot name="notice"></slot>
     <div class="con">
       <profile-bar :profile="profile" :size="50">
       </profile-bar>
+      <br>
       <div v-if="type===2">
         <van-button class="btn" @click="addFriend" block round type="primary">加为好友</van-button>
       </div>
@@ -17,11 +19,17 @@
       </div>
       <!--      处理群组申请-->
       <div v-if="type===5">
-        <van-button class="btn" @click="permitAddGroup" block round type="primary">同意群组邀请</van-button>
-        <van-button class="btn" @click="rejectAddGroup" block round type="primary">拒绝</van-button>
+        <van-button class="btn" @click="permitJoinGroup" block round type="primary">同意群组邀请</van-button>
+        <van-button class="btn" @click="rejectJoinGroup" block round type="primary">拒绝</van-button>
       </div>
       <div v-if="type===6">
         <van-button class="btn" @click="sendMessage" block round type="primary">发送消息</van-button>
+      </div>
+      <div v-if="type===7">
+        <van-collapse v-model="activeType">
+          <van-collapse-item title="空间物品" name="2">内容</van-collapse-item>
+          <van-collapse-item title="空间成员" name="1">内容</van-collapse-item>
+        </van-collapse>
       </div>
     </div>
 
@@ -39,7 +47,6 @@ import {
   handleGroupMessage
 } from '@/sevice/message'
 import ProfileBar from '../components/profileBar'
-import NavBar from '../components/navBar'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -49,27 +56,29 @@ export default {
       // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请 6. 发消息
       type: 0,
       profile: {},
+      activeType: []
     }
   },
   components: {
-    NavBar,
     ProfileBar
   },
   created() {
     this.init()
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo', 'friend'])
   },
   methods: {
     init() {
-      const {type, id, name, avatarUrl, message_id} = this.$route.query
+      const {type, id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatarUrl} = this.$route.query
       this.type = +type
       this.profile = {
         id,
         name,
         avatarUrl,
-        message_id
+        messageId,
+        sourceUserId,
+        sourceUserAvatarUrl
       }
     },
     // 6
@@ -78,7 +87,7 @@ export default {
     },
     permitAddFriend() {
       handleFriendMessage({
-        message_id: this.profile.message_id,
+        message_id: this.profile.messageId,
         answer: 1,
         source_user_id: this.profile.id
       })
@@ -91,11 +100,50 @@ export default {
     },
     rejectAddFriend() {
     },
-    permitAddGroup() {
-
+    // 同意加入群组
+    permitJoinGroup() {
+      const {sourceUserId, id, messageId, sourceUserName} = this.profile
+      debugger
+      handleGroupMessage({
+        group_id: id,
+        source_user_id: sourceUserId,
+        answer: 1,
+        message_id: messageId
+      })
+          .then(res => {
+            debugger
+            this.$socket.emit('permitJoinGroup', {
+              query: {
+                group_id: id,
+                source_user_id: sourceUserId,
+                // source_user_name: sourceUserName,
+                target_user_id: this.userInfo.id,
+                target_user_name: this.userInfo.name
+              }
+            })
+          })
     },
-    rejectAddGroup() {
-
+    // 不进组
+    rejectJoinGroup() {
+      const {sourceUserId, id, messageId, sourceUserName} = this.profile
+      handleGroupMessage({
+        group_id: id,
+        source_user_id: sourceUserId,
+        answer: 2,
+        message_id: messageId
+      })
+          .then(res => {
+            debugger
+            this.$socket.emit('rejectJoinGroup', {
+              query: {
+                group_id: id,
+                source_user_id: sourceUserId,
+                // source_user_name: sourceUserName,
+                target_user_id: this.userInfo.id,
+                target_user_name: this.userInfo.name
+              }
+            })
+          })
     },
     addFriend() {
       // 1. 聊天消息 2.好友申请 3.群组邀请
@@ -104,7 +152,6 @@ export default {
         target_user_id: id,
       })
           .then(res => {
-
             this.$socket.emit('addFriend', {
               query: {
                 source_user_id: this.userInfo.id,
@@ -113,7 +160,6 @@ export default {
             })
           })
           .catch()
-
     }
   },
   mounted() {
