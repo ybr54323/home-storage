@@ -2,18 +2,26 @@
   <div>
     <slot name="nav-bar"></slot>
     <slot name="notice"></slot>
-    <div class="con">
-      <div class="good-bar">
-        {{userGood}}
-        <profile-bar v-for="g in userGood" :key="g.id" :profile="{
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <div class="con">
+        <div class="good-bar">
+          {{userGood}}
+        </div>
+        <van-collapse v-model="activeNames">
+          <van-collapse-item title="你的物品" name="good">
+            <profile-bar v-for="g in userGood" :key="g.id" :profile="{
           id: g.id,
           name: g.name,
-          avatarUrl: g.good_avatar_url,
+          avatarUrl: g.good_img_url,
           des: g.des
-        }">
-        </profile-bar>
+        }"
+                         @profile-detail-click="onViewGoodDetail(g)"
+            >
+            </profile-bar>
+          </van-collapse-item>
+        </van-collapse>
       </div>
-    </div>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -25,8 +33,8 @@ export default {
   name: "Index",
   data() {
     return {
-      show: false,
-      active: 'home'
+      isLoading: false,
+      activeNames: ['good']
     }
   },
   components: {
@@ -39,7 +47,26 @@ export default {
       'userGood'
     ])
   },
-  methods: {}
+  methods: {
+    onRefresh() {
+
+    },
+    onViewGoodDetail(good) {
+      const {id, name, des, good_img_url, create_date, delete_date} = good
+      this.$router.push({
+        path: '/good_detail',
+        query: {
+          id,
+          name,
+          des,
+          good_img_url,
+          create_date,
+          delete_date
+        }
+      })
+
+    }
+  }
 }
 </script>
 

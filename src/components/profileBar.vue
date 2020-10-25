@@ -55,7 +55,8 @@ export default {
         messageId: profile.messageId,
         sourceUserId: profile.sourceUserId || '',
         sourceUserAvatar: profile.sourceUserAvatar || '',
-        sourceUserName: profile.sourceUserName || ''
+        sourceUserName: profile.sourceUserName || '',
+        des: profile.des || ''
       })
     }
   }

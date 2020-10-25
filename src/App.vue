@@ -14,7 +14,7 @@
     <!--    <h2>{{groupMessage}}</h2>-->
     <!--        顶栏-->
     <nav-bar
-        v-if="hasNavBar"
+        class="nav-bar"
         :title="$route.meta.title"
         :on-click-right="operationMap.get($route.path).onClickRight || void 0"
         :right-text="operationMap.get($route.path).rightText || void 0"
@@ -81,8 +81,9 @@ export default {
       ['/pending_page', {}],
       ['/new_group', {}],
       ['/chat_room', {}],
-      ['/new_good', {}]
-
+      ['/new_good', {}],
+      ['/edit_group', {}],
+        ['/good_detail', {}]
     ])
     return {
 
@@ -129,9 +130,9 @@ export default {
       'group',
       'notice',
     ]),
-    hasNavBar() {
-      return !/^\/login.*/.test(this.$route.path)
-    },
+    // hasNavBar() {
+    //   return !/^\/login.*/.test(this.$route.path)
+    // },
     hasNotice() {
       return !/^\/login.*/.test(this.$route.path)
     },
@@ -226,6 +227,15 @@ export default {
 @import "./common/css/common.css";
 
 #app {
-  padding-bottom: 50px;
+  position: relative;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+.nav-bar {
+  width: 100%;
+  z-index: 2;
+  position: fixed;
+  background-color: #fff;
 }
 </style>

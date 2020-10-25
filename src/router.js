@@ -13,7 +13,8 @@ import NewGroup from './view/newGroup'
 import Group from './view/group'
 import ChatRoom from './view/chatRoom'
 import NewGood from './view/newGood'
-
+import EditGroup from './view/editGroup'
+import GoodDetail from './view/goodDetail'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -78,7 +79,7 @@ const router = new VueRouter({
     name: 'PendingPage',
     component: PendingPage,
     meta: {
-      title: '',
+      title: '待处理',
       requireLogin: true
     }
   }, {
@@ -106,8 +107,6 @@ const router = new VueRouter({
       title: '聊天',
       requireLogin: true
     }
-
-    ,
   }, {
 
     path: '/new_good',
@@ -117,9 +116,23 @@ const router = new VueRouter({
       title: '创建物品',
       requireLogin: true
     }
+  }, {
 
-    ,
-
+    path: '/edit_group',
+    name: 'EditGroup',
+    component: EditGroup,
+    meta: {
+      title: '编辑空间',
+      requireLogin: true
+    }
+  }, {
+    path: '/good_detail',
+    name: 'GoodDetail',
+    component: GoodDetail,
+    meta: {
+      title: '编辑物品',
+      requireLogin: true
+    }
   }]
 })
 router.beforeEach((to, from, next) => {

@@ -22,7 +22,7 @@
             :rules="[]"
         />
       </van-form>
-      <van-field name="switch" label="是否给物品配图">
+      <van-field name="switch" label="给物品配图">
         <template #input>
           <van-switch v-model="goodForm.isUseImg" size="20"/>
         </template>
@@ -33,9 +33,10 @@
             :max-size="500 * 1024"
             @oversize="onOversize"
             :after-read="afterRead"
+            multiple
         />
       </van-cell>
-      <van-field name="switch" label="是否将物品纳入空间">
+      <van-field name="switch" label="添加到空间">
         <template #input>
           <van-switch v-model="goodForm.isPutInGroup" size="20"/>
         </template>
@@ -57,6 +58,7 @@
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
+
       <div style="margin: 16px;">
         <van-button @click="onCreateGood" round block type="info">
           提交

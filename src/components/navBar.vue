@@ -1,16 +1,24 @@
 <template>
-  <van-nav-bar
-      :title="title"
-      :right-text="rightText"
-      @click-right="onClickRight"
-      @click-left="onClickLeft"
-      left-arrow
-  >
-  </van-nav-bar>
+  <div>
+    <van-nav-bar
+        v-if="this.$route.path!=='/login'"
+        :title="title"
+        :right-text="rightText"
+        @click-right="onClickRight"
+        @click-left="onClickLeft"
+        left-arrow
+    >
+    </van-nav-bar>
+    <van-nav-bar
+        v-else
+        :title="title"
+    >
+    </van-nav-bar>
+  </div>
 </template>
 
-<script>
 
+<script>
 export default {
   props: {
     title: {

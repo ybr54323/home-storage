@@ -30,9 +30,11 @@
           <van-collapse-item title="空间物品" name="2">内容</van-collapse-item>
           <van-collapse-item title="空间成员" name="1">内容</van-collapse-item>
         </van-collapse>
+        <br>
+        <van-button class="btn" @click="editGood" block round type="primary">编辑物品</van-button>
+        <van-button class="btn" @click="editGroupMate" block round type="primary">编辑成员</van-button>
       </div>
     </div>
-
   </div>
 
 </template>
@@ -69,8 +71,14 @@ export default {
     ...mapGetters(['userInfo', 'friend'])
   },
   methods: {
+    editGood() {
+
+    },
+    editGroupMate() {
+
+    },
     init() {
-      const {type, id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatarUrl} = this.$route.query
+      const {type, id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatarUrl, des} = this.$route.query
       this.type = +type
       this.profile = {
         id,
@@ -78,7 +86,8 @@ export default {
         avatarUrl,
         messageId,
         sourceUserId,
-        sourceUserAvatarUrl
+        sourceUserAvatarUrl,
+        des
       }
     },
     // 6

@@ -17,6 +17,7 @@
               id: f.id,
               name: f.name,
               avatarUrl: f.group_avatar_url,
+              des: f.des
             }"
             @profile-detail-click="viewGroupProfile"
         ></profile-bar>
@@ -59,14 +60,15 @@ export default {
     ]),
     // 查看空间详情
     viewGroupProfile(profile) {
-      const {id, name, avatarUrl} = profile;
+      const {id, name, avatarUrl, des} = profile;
       this.$router.push({
         path: 'profile',
         query: {
           type: '7',
           id,
           name,
-          avatarUrl
+          avatarUrl,
+          des
         }
       })
     },
