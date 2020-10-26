@@ -83,7 +83,7 @@ export default {
       ['/chat_room', {}],
       ['/new_good', {}],
       ['/edit_group', {}],
-        ['/good_detail', {}]
+      ['/good_detail', {}]
     ])
     return {
 
@@ -104,13 +104,18 @@ export default {
       handler(curPath, oldPath) {
         if (curPath === oldPath) return
         if (curPath === '/login') return
-        // if (curPath === '/') {
-        this.getFriendMessage()
-        this.getFriend()
-        this.getGroupMessage()
-        this.getGroup()
-        this.getUserGood()
-        // }
+        if (curPath === '/') {
+          this.getFriendMessage()
+          this.getGroupMessage()
+          this.getUserGood()
+        }
+        if (curPath === '/group') {
+          this.getClientGroup()
+        }
+        if (curPath === '/friend') {
+          this.getFriend()
+        }
+
       },
       immediate: true
     }
@@ -144,7 +149,7 @@ export default {
     ...mapActions([
       'getFriend',
       'getFriendMessage',
-      'getGroup',
+      'getClientGroup', // 获取用户自己的群组
       'getGroupMessage',
       'getUserGood', // 获取用户自己的物品
     ]),
@@ -232,6 +237,7 @@ export default {
   max-height: 100vh;
   overflow-y: scroll;
 }
+
 .nav-bar {
   width: 100%;
   z-index: 2;

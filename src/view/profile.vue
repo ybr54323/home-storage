@@ -27,8 +27,33 @@
       </div>
       <div v-if="type===7">
         <van-collapse v-model="activeType">
-          <van-collapse-item title="空间物品" name="2">内容</van-collapse-item>
-          <van-collapse-item title="空间成员" name="1">内容</van-collapse-item>
+          <van-collapse-item title="空间物品" name="good">
+            <template v-if="groupGood.length">
+              <profile-bar
+                  v-for="g in groupGood"
+                  :key="g.id"
+                  :profile="{
+                    id: g.id,
+                    name: g.name,
+                    avatarUrl: g.good_img_url,
+                    des: g.des
+                  }"
+              ></profile-bar>
+            </template>
+          </van-collapse-item>
+          <van-collapse-item title="空间成员" name="user">
+            <template v-if="groupUser.length">
+              <profile-bar
+                  v-for="u in groupUser"
+                  :key="u.id"
+                  :profile="{
+                    id: u.id,
+                    name: u.name,
+                    avatarUrl: u.user_avatar_url,
+                  }"
+              ></profile-bar>
+            </template>
+          </van-collapse-item>
         </van-collapse>
         <br>
         <van-button class="btn" @click="editGood" block round type="primary">编辑物品</van-button>
@@ -50,15 +75,22 @@ import {
 } from '@/sevice/message'
 import ProfileBar from '../components/profileBar'
 import {mapGetters} from 'vuex'
+import {getGroupUser} from "@/sevice/groupUser"; // 获取群组下的用户
+import {getGroupGood} from "@/sevice/groupGood"; // 获取群组下的物品
 
 export default {
   name: "profile",
   data() {
     return {
-      // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请 6. 发消息
+      // 1. 聊天消息 2.好友申请 3.群组邀请 4.处理好友申请 5.处理群组申请 6. 发消息 7. 群组detail
       type: 0,
       profile: {},
-      activeType: []
+      activeType: [
+        'good', 'user'
+      ],
+      // 7.群组detail
+      groupUser: [],
+      groupGood: [],
     }
   },
   components: {
@@ -88,6 +120,23 @@ export default {
         sourceUserId,
         sourceUserAvatarUrl,
         des
+      }
+      switch (this.type) {
+        case 7:
+          // group_id
+          getGroupUser(this.profile.id)
+              .then(res => {
+                const {data: {users}} = res
+                this.groupUser = users
+              })
+          getGroupGood(this.profile.id)
+              .then(res => {
+                const {data: {goods}} = res
+                this.groupGood = goods
+
+              })
+          break
+
       }
     },
     // 6

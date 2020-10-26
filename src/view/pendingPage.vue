@@ -53,7 +53,7 @@
 <script>
 import ProfileBar from "@/components/profileBar";
 import {mapGetters} from 'vuex'
-import {viewFriendMessage} from "@/sevice/message";
+import {viewFriendMessage, viewGroupMessage} from "@/sevice/message";
 
 export default {
   name: "newFriend",
@@ -102,7 +102,7 @@ export default {
       if (this.friendUnread && this.type === 1) {
         this.viewFriendMessage()
       } else if (this.groupUnread && this.type === 2) {
-
+        this.viewGroupMessage()
       }
     }
   }
