@@ -7,7 +7,7 @@
         <div class="icon-rect">
           <van-icon name="friends-o" size="25" :badge="friendUnread||null" color="#fff"/>
         </div>
-        <span class="text-search">新的朋友</span>
+        <span class="text-search">{{friendUnread ? '有新的好友申请待通过' : '查看过往的好友申请'}}</span>
       </van-cell>
       <br>
       <profile-bar

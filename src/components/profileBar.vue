@@ -56,7 +56,8 @@ export default {
         sourceUserId: profile.sourceUserId || '',
         sourceUserAvatar: profile.sourceUserAvatar || '',
         sourceUserName: profile.sourceUserName || '',
-        des: profile.des || ''
+        des: profile.des || '',
+        ownerUserId: profile.ownerUserId || ''
       })
     }
   }

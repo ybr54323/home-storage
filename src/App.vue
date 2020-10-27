@@ -10,8 +10,8 @@
     <!--    <h2>{{friendMessage}}</h2>-->
     <!--    <h1>group</h1>-->
     <!--    <h2>{{group}}</h2>-->
-    <!--    <h1>groupMessage</h1>-->
-    <!--    <h2>{{groupMessage}}</h2>-->
+<!--        <h1>groupMessage</h1>-->
+<!--        <h2>{{groupMessage}}</h2>-->
     <!--        顶栏-->
     <nav-bar
         class="nav-bar"

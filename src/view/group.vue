@@ -7,17 +7,19 @@
         <div class="icon-rect">
           <van-icon name="home-o" size="25" :badge="groupUnread||null" color="#fff"/>
         </div>
-        <span class="text-search">新的群组</span>
+        <span class="text-search">{{groupUnread ? '有新的群组邀请待通过' : '查看过往群组邀请'}}</span>
       </van-cell>
       <br>
+      {{group}}
       <template v-if="group.length">
         <profile-bar
-            v-for="f in group" :key="f.id"
+            v-for="g in group" :key="g.id"
             :profile="{
-              id: f.id,
-              name: f.name,
-              avatarUrl: f.group_avatar_url,
-              des: f.des
+              id: g.id,
+              name: g.name,
+              avatarUrl: g.group_avatar_url,
+              des: g.des,
+              ownerUserId: g.owner_user_id
             }"
             @profile-detail-click="viewGroupProfile"
         ></profile-bar>
@@ -60,7 +62,7 @@ export default {
     ]),
     // 查看空间详情
     viewGroupProfile(profile) {
-      const {id, name, avatarUrl, des} = profile;
+      const {id, name, avatarUrl, des, ownerUserId} = profile;
       this.$router.push({
         path: 'profile',
         query: {
@@ -68,7 +70,8 @@ export default {
           id,
           name,
           avatarUrl,
-          des
+          des,
+          ownerUserId
         }
       })
     },

@@ -93,16 +93,11 @@ export default {
       const {id, name, avatarUrl, messageId} = user
       this.$router.push({path: '/profile', query: {id, name, avatarUrl, messageId, type: 4}})
     },
-    viewFriendMessage() {
-      viewFriendMessage()
-          .then()
-          .catch()
-    },
     init() {
       if (this.friendUnread && this.type === 1) {
-        this.viewFriendMessage()
+        viewFriendMessage()
       } else if (this.groupUnread && this.type === 2) {
-        this.viewGroupMessage()
+        viewGroupMessage()
       }
     }
   }

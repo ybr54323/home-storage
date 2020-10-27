@@ -56,7 +56,7 @@ service.interceptors.response.use(
       Toast.success({message: msg, position: 'top'})
       return Promise.resolve({code, data, msg})
     }
-    if (code === 401) {
+    if (code === 401) { // 未登录
       Toast.fail({
         message: msg,
         position: 'top'
@@ -68,13 +68,28 @@ service.interceptors.response.use(
       // window.history.href = window.location.host + '/#/login?step=0'
       return Promise.reject(code)
     }
-    if (code === 402 || code === 500) {
+    if (code === 402 || code === 500) { // 参数错误或者服务异常
       Toast.fail({
         message: msg,
         position: 'top'
       })
       return Promise.reject(code)
     }
+    if (code === 405) { // 插入重复
+      Toast.fail({
+        message: msg,
+        position: 'top'
+      })
+      return Promise.reject(code)
+    }
+    if (code === 406) { // 没权限
+      Toast.fail({
+        message: msg,
+        position: 'top'
+      })
+      return Promise.reject(code)
+    }
+
   },
   error => {
     debugger

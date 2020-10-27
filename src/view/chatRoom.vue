@@ -2,7 +2,7 @@
   <div class="chat-room-con">
     <slot name="nav-bar"></slot>
     <slot name="notice"></slot>
-    <div class="msg-con">
+    <div class="con">
       <div class="chat-row-mine">
         <div class="chat-area-mine">
           <div class="text-bar">

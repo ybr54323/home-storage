@@ -16,3 +16,10 @@ export function getGroup() {
     method: 'get'
   })
 }
+
+export function delGroup(group_id) {
+  return http({
+    url: '/group/' + group_id,
+    method: 'delete'
+  })
+}

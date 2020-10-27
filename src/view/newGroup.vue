@@ -3,7 +3,7 @@
     <slot name="nav-bar"></slot>
     <slot name="notice"></slot>
     <div class="con">
-      <van-form>
+      <van-form ref="groupForm">
         <van-field
             v-model="groupForm.name"
             label="群名"
@@ -22,9 +22,6 @@
           </template>
         </van-field>
       </van-form>
-      groupForm.temAvatarUrl
-      <br>
-      {{groupForm.temAvatarUrl}}
       <van-cell v-if="groupForm.customAvatar">
         <van-uploader v-model="groupForm.temAvatarUrl" :max-size="500 * 1024"
                       @oversize="onOversize"
@@ -36,9 +33,6 @@
           <van-switch v-model="groupForm.inviteFriend" size="20"/>
         </template>
       </van-field>
-      groupForm.friendIds
-      <br>
-      {{groupForm.friendIds}}
       <van-checkbox-group v-if="groupForm.inviteFriend" v-model="groupForm.friendIds">
         <van-cell-group>
           <van-cell
@@ -85,7 +79,6 @@ export default {
         customAvatar: false, // 是否带空间头像
         temAvatarUrl: [],
         avatarUrl: '' // 阿里oss的图片url
-
       },
       client: null
     }
@@ -109,16 +102,16 @@ export default {
     onCreateGroup() {
       this.$refs.groupForm.validate()
           .then(_ => {
-            debugger
             // 1.create group 2.if invite,create message
             createGroup(this.groupForm)
-                .then(res => {
+                .then(_ => {
                   this.$socket.emit('inviteFriend', {
                     query: {
                       source_user_id: this.userInfo.id,
                       target_user_ids: this.groupForm.friendIds
                     }
                   })
+                  this.$router.push({path: '/'})
                 })
           })
     },
@@ -129,7 +122,7 @@ export default {
       this.client.multipartUpload(`/home-storage/user_${this.userInfo.id}/${new Date().getTime()}_${file.file.name}`, file.file).then(function (result) {
         const {res: {requestUrls}} = result
         const [avatarUrl] = requestUrls
-        vm.avatarUrl = avatarUrl
+        vm.groupForm.avatarUrl = avatarUrl
         file.status = 'success';
         file.message = '上传成功';
       }).catch(function (err) {

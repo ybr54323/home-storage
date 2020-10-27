@@ -58,6 +58,7 @@
         <br>
         <van-button class="btn" @click="editGood" block round type="primary">编辑物品</van-button>
         <van-button class="btn" @click="editGroupMate" block round type="primary">编辑成员</van-button>
+        <van-button v-if="canDelGroup" class="btn" @click="delGroup" block round type="danger">删除群组</van-button>
       </div>
     </div>
   </div>
@@ -77,6 +78,7 @@ import ProfileBar from '../components/profileBar'
 import {mapGetters} from 'vuex'
 import {getGroupUser} from "@/sevice/groupUser"; // 获取群组下的用户
 import {getGroupGood} from "@/sevice/groupGood"; // 获取群组下的物品
+import {delGroup} from "@/sevice/group";
 
 export default {
   name: "profile",
@@ -100,9 +102,27 @@ export default {
     this.init()
   },
   computed: {
-    ...mapGetters(['userInfo', 'friend'])
+    ...mapGetters(['userInfo', 'friend']),
+    // 判断是否有权限删除群组，当前用户id === owner_user_id
+    canDelGroup() {
+      return +this.profile.ownerUserId === this.userInfo.id
+    }
   },
   methods: {
+    // 删除群组
+    delGroup() {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确认删除该群组?'
+      })
+          .then(_ => {
+            const {id: group_id} = this.profile
+            delGroup(group_id)
+                .then(res => {
+                  this.$router.go(-1)
+                })
+          })
+    },
     editGood() {
 
     },
@@ -110,7 +130,7 @@ export default {
 
     },
     init() {
-      const {type, id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatarUrl, des} = this.$route.query
+      const {type, id, name, avatarUrl, messageId, sourceUserId, sourceUserAvatarUrl, des, ownerUserId} = this.$route.query
       this.type = +type
       this.profile = {
         id,
@@ -119,7 +139,8 @@ export default {
         messageId,
         sourceUserId,
         sourceUserAvatarUrl,
-        des
+        des,
+        ownerUserId, // 群组拥有者id
       }
       switch (this.type) {
         case 7:
@@ -161,7 +182,6 @@ export default {
     // 同意加入群组
     permitJoinGroup() {
       const {sourceUserId, id, messageId, sourceUserName} = this.profile
-      debugger
       handleGroupMessage({
         group_id: id,
         source_user_id: sourceUserId,
@@ -169,7 +189,6 @@ export default {
         message_id: messageId
       })
           .then(res => {
-            debugger
             this.$socket.emit('permitJoinGroup', {
               query: {
                 group_id: id,
@@ -179,6 +198,7 @@ export default {
                 target_user_name: this.userInfo.name
               }
             })
+            this.$router.push({path: '/group'})
           })
     },
     // 不进组
