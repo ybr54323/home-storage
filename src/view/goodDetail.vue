@@ -8,7 +8,9 @@
           <img class="img-swiper" v-lazy="url"/>
         </van-swipe-item>
       </van-swipe>
-      {{goodForm}}
+      <van-button class="btn" @click="skipEditGood" block round type="primary">编辑物品</van-button>
+      <van-button class="btn" @click="editGroupMate" block round type="primary">编辑群组</van-button>
+      <van-button v-if="canDelGroup" class="btn" @click="delGroup" block round type="danger">删除物品</van-button>
       <van-form ref="goodForm">
         <van-field
             v-model="goodForm.name"
@@ -50,6 +52,8 @@ export default {
   name: "goodDetail",
   data() {
     return {
+      // 1.初始 2.编辑（更新）
+      step: 1,
       goodForm: {
         id: '', // 物品id
         name: '', // 物品名
