@@ -44,3 +44,10 @@ export function editGood({
     }
   })
 }
+
+export function delGood(good_id) {
+  return http({
+    url: '/good/' + good_id,
+    method: 'delete'
+  })
+}

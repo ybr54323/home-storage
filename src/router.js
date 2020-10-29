@@ -15,6 +15,8 @@ import ChatRoom from './view/chatRoom'
 import NewGood from './view/newGood'
 import EditGroup from './view/editGroup'
 import GoodDetail from './view/goodDetail'
+import EditGood from './view/editGood'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -129,6 +131,14 @@ const router = new VueRouter({
     path: '/good_detail',
     name: 'GoodDetail',
     component: GoodDetail,
+    meta: {
+      title: '物品详情',
+      requireLogin: true
+    }
+  }, {
+    path: '/edit_good',
+    name: 'EditGood',
+    component: EditGood,
     meta: {
       title: '编辑物品',
       requireLogin: true

@@ -52,7 +52,7 @@ export default {
 
     },
     onViewGoodDetail(good) {
-      const {id, name, des, good_img_url, create_date, delete_date} = good
+      const {id, name, des, good_img_url, create_date, delete_date, owner_user_id} = good
       this.$router.push({
         path: '/good_detail',
         query: {
@@ -61,7 +61,8 @@ export default {
           des,
           good_img_url,
           create_date,
-          delete_date
+          delete_date,
+          owner_user_id
         }
       })
 
