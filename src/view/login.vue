@@ -1,5 +1,10 @@
 <template>
   <div>
+    <van-nav-bar
+        @click-left="onBack"
+        left-arrow
+    >
+    </van-nav-bar>
     <div class="con">
       <div class="step0" v-if="step===0">
         <van-button class="btn" @click="step = 1" type="primary" block>手机号码验证码登录</van-button>

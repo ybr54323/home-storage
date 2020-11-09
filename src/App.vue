@@ -10,8 +10,8 @@
     <!--    <h2>{{friendMessage}}</h2>-->
     <!--    <h1>group</h1>-->
     <!--    <h2>{{group}}</h2>-->
-<!--        <h1>groupMessage</h1>-->
-<!--        <h2>{{groupMessage}}</h2>-->
+    <!--        <h1>groupMessage</h1>-->
+    <!--        <h2>{{groupMessage}}</h2>-->
     <!--        顶栏-->
     <nav-bar
         class="nav-bar"
@@ -83,7 +83,8 @@ export default {
       ['/chat_room', {}],
       ['/new_good', {}],
       ['/edit_group', {}],
-      ['/good_detail', {}]
+      ['/good_detail', {}],
+      ['/edit_good', {}]
     ])
     return {
 

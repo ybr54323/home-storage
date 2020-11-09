@@ -9,11 +9,6 @@
         left-arrow
     >
     </van-nav-bar>
-    <van-nav-bar
-        v-else
-        :title="title"
-    >
-    </van-nav-bar>
   </div>
 </template>
 
