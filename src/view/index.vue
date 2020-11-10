@@ -10,11 +10,11 @@
         <van-collapse v-model="activeNames">
           <van-collapse-item title="你的物品" name="good">
             <profile-bar v-for="g in userGood" :key="g.id" :profile="{
-          id: g.id,
-          name: g.name,
-          avatarUrl: g.good_img_url,
-          des: g.des
-        }"
+                            id: g.id,
+                            name: g.name,
+                            avatarUrl: g.good_img_url,
+                            des: g.des
+                          }"
                          @profile-detail-click="onViewGoodDetail(g)"
             >
             </profile-bar>

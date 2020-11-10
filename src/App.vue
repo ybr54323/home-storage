@@ -75,7 +75,7 @@ export default {
       }],
       ['/mine', {}],
       ['/login', {}],
-      ['/search', {}],
+      ['/search_good', {}],
       ['/add_friend', {}],
       ['/profile', {}],
       ['/pending_page', {}],
@@ -87,7 +87,6 @@ export default {
       ['/edit_good', {}]
     ])
     return {
-
       hasTabBarRoute,
       showPopUp: false, // 左侧弹
       operationMap, // 操作map
@@ -116,7 +115,6 @@ export default {
         if (curPath === '/friend') {
           this.getFriend()
         }
-
       },
       immediate: true
     }
@@ -206,7 +204,6 @@ export default {
             break
           case 'permitJoinGroup':
             this.setNotice(msg)
-            // const {query: {target_user_id}}
             break
           case 'rejectJoinGroup':
             this.setNotice(msg)

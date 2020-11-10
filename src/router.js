@@ -5,7 +5,7 @@ import Index from './view/index'
 import Mine from './view/mine'
 import Login from './view/login'
 import Friend from './view/friend'
-import Search from './view/search'
+import SearchGood from './view/searchGood'
 import AddFriend from './view/addFriend'
 import Profile from './view/profile'
 import PendingPage from './view/pendingPage'
@@ -53,11 +53,11 @@ const router = new VueRouter({
       requireLogin: true
     }
   }, {
-    path: '/search',
-    name: 'Search',
-    component: Search,
+    path: '/search_good',
+    name: 'SearchGood',
+    component: SearchGood,
     meta: {
-      title: '搜索',
+      title: '搜索物品',
       requireLogin: true
     }
   }, {
