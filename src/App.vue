@@ -36,9 +36,10 @@
         position="left"
         :style="{ width: '30%', height: '100vh'}"
     >
-      <van-cell title="新建群组" @click="newGroup"></van-cell>
-      <van-cell title="新建物品" @click="newGood"></van-cell>
+      <van-cell title="新建群组" @click="skipNewGroup"></van-cell>
+      <van-cell title="新建物品" @click="skipNewGood"></van-cell>
     </van-popup>
+    <van-search @click="skipSearchGood" placeholder="搜索物品"/>
     <van-tabbar v-if="hasTabBar" route active-color="#07c160" inactive-color="#000">
       <van-tabbar-item to="/" replace icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item to="/group" icon="send-gift-o" :badge="groupUnread || null">你的空间</van-tabbar-item>
@@ -164,11 +165,14 @@ export default {
       'setFriend',
       'setNotice'
     ]),
-    newGood() {
+    skipSearchGood() {
+      this.$router.push({path: '/search_good'})
+    },
+    skipNewGood() {
       this.$router.push({path: '/new_good'})
       this.showPopUp = false
     },
-    newGroup() {
+    skipNewGroup() {
       this.$router.push({path: '/new_group'})
       this.showPopUp = false
     },
