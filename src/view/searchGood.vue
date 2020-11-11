@@ -6,6 +6,7 @@
       <template v-if="dynamicUserGood.length">
         <profile-bar
             v-for="good in dynamicUserGood"
+            :key="good.id"
             :profile="good"
             @profile-detail-click="skipGoodDetail"
         ></profile-bar>

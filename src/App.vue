@@ -180,14 +180,14 @@ export default {
 
     },
     auth() {
-      if (!this.userInfo.id && !localStorage.getItem('userInfo')) {
-        this.$router.push({path: '/login'})
-      } else {
-        if (!this.userInfo.id) {
-          const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-          this.setUserInfo(userInfo)
-        }
-      }
+      // if (!this.userInfo.id && !localStorage.getItem('userInfo')) {
+      //   this.$router.push({path: '/login'})
+      // } else {
+      //   if (!this.userInfo.id) {
+      //     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      //     this.setUserInfo(userInfo)
+      //   }
+      // }
     },
   },
   sockets: {
