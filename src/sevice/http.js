@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {Toast, Dialog} from 'vant';
-import store from '../store/index'
 import router from '../router';
 
 /**
@@ -9,7 +8,6 @@ import router from '../router';
  * 408 未知错误 - 当前页处理
  * 500 后台代码错误
  */
-
 
 function getCookie(name) {
   const kVC = document.cookie.split(';')

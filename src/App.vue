@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <process-bar
+      :height="10"
+    ></process-bar>
     <!--    <h1>id</h1>-->
     <!--    <h2>{{userInfo.id}}</h2>-->
     <!--    <h1>friendUnread</h1>-->
@@ -52,7 +55,7 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import NavBar from './components/navBar'
-
+import ProcessBar from './components/processBar'
 export default {
   name: 'App',
   data() {
@@ -94,7 +97,8 @@ export default {
     }
   },
   components: {
-    NavBar
+    NavBar,
+    ProcessBar
   },
   created() {
     this.setShowTarBar(true)

@@ -1,11 +1,11 @@
 <template>
   <div
+      v-show="isShow"
       :class="{'process-bar': 1, 'done': done}"
       :style="{
         height: _height
       }"
   >
-
   </div>
 </template>
 
@@ -52,7 +52,7 @@ export default {
 <style scoped>
 .process-bar {
   width: 100vw;
-  position: relative;
+  position: fixed;
   border-radius: 10px;
   background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
   transform: translateX(-5vw);

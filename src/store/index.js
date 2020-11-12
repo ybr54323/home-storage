@@ -33,8 +33,10 @@ export default new Vuex.Store({
       notice: ''
     },
     appStatus: {
-      showTarBar: true
-    }
+      showTarBar: true,
+      showLoading: false,
+      loadingDone: false
+    },
   },
   actions: {
     getFriend({state, commit}) {
@@ -127,6 +129,12 @@ export default new Vuex.Store({
     },
     setNotice(state, notice) {
       state.userInfo.notice = notice
+    },
+    setLoading(state, loading) {
+      state.appStatus.showLoading = loading
+    },
+    setLoadingDone(state, loadingDone) {
+      state.appStatus.loadingDone = loadingDone
     }
   },
   getters: {
@@ -171,6 +179,12 @@ export default new Vuex.Store({
     },
     notice(state) {
       return state.userInfo.notice
+    },
+    loading(state) {
+      return state.appStatus.showLoading
+    },
+    loadingDone(state) {
+      return state.appStatus.loadingDone
     }
   }
 });
