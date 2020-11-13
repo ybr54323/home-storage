@@ -74,7 +74,7 @@ import {mapGetters, mapActions} from "vuex";
 import ProfileBar from '../components/profileBar'
 import {createGood} from "@/sevice/good";
 import {Toast} from "vant";
-import {getClient} from "../../utl/oss";
+import {getClient} from "../../util/oss";
 
 export default {
   name: "newGood",

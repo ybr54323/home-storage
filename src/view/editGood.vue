@@ -36,7 +36,7 @@
 
 <script>
 import {getGoodDetail, editGood} from "@/sevice/good";
-import {getClient} from "../../utl/oss";
+import {getClient} from "../../util/oss";
 import {Toast} from "vant";
 import {mapGetters} from 'vuex'
 

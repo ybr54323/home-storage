@@ -1,0 +1,45 @@
+.process-bar {
+  width: 100vw;
+  border-radius: 10px;
+  background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
+  transform: translateX(-5vw);
+  animation: processing 4s cubic-bezier(.08, .82, .17, 1) 0s;
+}
+
+.process-bar::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';
+  background-color: #fff;
+  opacity: 0;
+  border-radius: 10px;
+  animation: progress-active 1s cubic-bezier(.23, 1, .32, 1) infinite;
+}
+
+.process-bar.done {
+  width: 110vw;
+  transition: all .5s linear;
+}
+
+@keyframes processing {
+  0% {
+    transform: translateX(-100vw);
+  }
+  100% {
+    transform: translateX(-5vw);
+  }
+}
+
+@keyframes progress-active {
+  0% {
+    right: 95%;
+    opacity: 0;
+  }
+  100% {
+    right: 0;
+    opacity: .2;
+  }
+}

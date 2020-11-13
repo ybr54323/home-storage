@@ -62,7 +62,7 @@
 import ProfileBar from '../components/profileBar'
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {Toast} from "vant";
-import {getClient} from "../../utl/oss";
+import {getClient} from "../../util/oss";
 import {createGroupMessage} from "@/sevice/message";
 import {createGroup} from "@/sevice/group";
 

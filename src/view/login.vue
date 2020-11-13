@@ -5,10 +5,8 @@
         left-arrow
     >
     </van-nav-bar>
-    <process-bar
-      :height="20"
-    ></process-bar>
     <div class="con">
+      <van-button @click="test">test</van-button>
       <div class="step0" v-if="step===0">
         <van-button class="btn" @click="step = 1" type="primary" block>手机号码验证码登录</van-button>
         <van-button class="btn" @click="step = 3" type="primary" block>账号密码登录</van-button>
@@ -155,9 +153,7 @@
           </van-button>
         </van-form>
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -171,7 +167,7 @@ import {
   getResetCode,
   resetPwd
 } from '@/sevice/user'
-import processBar from '../components/processBar'
+import {ProcessBar} from '../../util/processBar'
 
 export default {
   name: "Login",
@@ -243,11 +239,15 @@ export default {
     const {step = 0} = this.$route.params
     this.step = +step
   },
-  components: {
-    processBar
+  mounted() {
+    ProcessBar.loading()
   },
+  components: {},
   methods: {
     ...mapMutations(['setUserInfo', 'setShowTarBar']),
+    test() {
+      ProcessBar.done()
+    },
     onSubmit() {
       // 0: 初始状态 1: 发送登录/注册验证码 2: 新用户 3: 账号密码登录 4.重设密码
       const {step, codeForm, registerForm, loginForm, resetForm, $refs: ref} = this
