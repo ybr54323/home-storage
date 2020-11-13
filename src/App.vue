@@ -26,11 +26,9 @@
         left-icon="volume-o"
         :text="notice"
     />
-    <!--    <transition name="van-fade">-->
+    <van-search v-if="hasSearchBar" @click="skipSearchGood" placeholder="搜索物品"/>
     <router-view>
     </router-view>
-    <!--    </transition>-->
-    <!--    左侧弹窗-->
     <van-popup
         v-model="showPopUp"
         position="left"
@@ -39,7 +37,6 @@
       <van-cell title="新建群组" @click="skipNewGroup"></van-cell>
       <van-cell title="新建物品" @click="skipNewGood"></van-cell>
     </van-popup>
-    <van-search @click="skipSearchGood" placeholder="搜索物品"/>
     <van-tabbar v-if="hasTabBar" route active-color="#07c160" inactive-color="#000">
       <van-tabbar-item to="/" replace icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item to="/group" icon="send-gift-o" :badge="groupUnread || null">你的空间</van-tabbar-item>
@@ -52,6 +49,7 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import NavBar from './components/navBar'
+
 export default {
   name: 'App',
   data() {
@@ -142,6 +140,9 @@ export default {
     },
     hasTabBar() {
       return this.hasTabBarRoute.indexOf(this.$route.path) >= 0
+    },
+    hasSearchBar() {
+      return !/^\/login.*/.test(this.$route.path)
     }
   },
   methods: {
@@ -232,6 +233,7 @@ export default {
 <style>
 @import "./common/css/common.css";
 @import "./common/css/process_bar.css";
+
 #app {
   position: relative;
   height: 100vh;

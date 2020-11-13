@@ -3,14 +3,22 @@
     <slot name="nav-bar"></slot>
     <slot name="notice"></slot>
     <div class="con">
-      <profile-bar :profile="userInfo" :size="100"></profile-bar>
+      <van-cell is-link>
+        <van-image
+            :src="userInfo.avatarUrl"
+            width="100"
+            height="100"
+            lazy-load
+            fit="cover"
+        ></van-image>
+      </van-cell>
+      <van-cell is-link>{{useInfo.name}}</van-cell>
     </div>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
-import ProfileBar from '../components/profileBar'
 
 export default {
   name: "Mine",
@@ -22,9 +30,7 @@ export default {
   computed: {
     ...mapGetters(['userInfo'])
   },
-  components: {
-    ProfileBar
-  }
+  components: {}
 }
 </script>
 

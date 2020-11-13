@@ -6,7 +6,6 @@
     >
     </van-nav-bar>
     <div class="con">
-      <van-button @click="test">test</van-button>
       <div class="step0" v-if="step===0">
         <van-button class="btn" @click="step = 1" type="primary" block>手机号码验证码登录</van-button>
         <van-button class="btn" @click="step = 3" type="primary" block>账号密码登录</van-button>
@@ -245,9 +244,6 @@ export default {
   components: {},
   methods: {
     ...mapMutations(['setUserInfo', 'setShowTarBar']),
-    test() {
-      ProcessBar.done()
-    },
     onSubmit() {
       // 0: 初始状态 1: 发送登录/注册验证码 2: 新用户 3: 账号密码登录 4.重设密码
       const {step, codeForm, registerForm, loginForm, resetForm, $refs: ref} = this
