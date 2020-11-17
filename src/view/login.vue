@@ -166,7 +166,6 @@ import {
   getResetCode,
   resetPwd
 } from '@/sevice/user'
-import {ProcessBar} from '../../util/processBar'
 
 export default {
   name: "Login",
@@ -239,7 +238,6 @@ export default {
     this.step = +step
   },
   mounted() {
-    ProcessBar.loading()
   },
   components: {},
   methods: {

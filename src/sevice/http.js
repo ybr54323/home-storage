@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Toast, Dialog} from 'vant';
 import router from '../router';
+import {ProcessBar} from "../../util/processBar";
 
 /**
  * 401 未登录 - 跳到登录页
@@ -31,13 +32,14 @@ const service = axios.create({
 service.interceptors.request.use(
   request => {
     if (!request.hideLoading) {
-      Toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        loadingType: 'spinner',
-        duration: 0,
-        position: 'top'
-      });
+      ProcessBar.loading()
+      // Toast.loading({
+      //   message: '加载中...',
+      //   forbidClick: true,
+      //   loadingType: 'spinner',
+      //   duration: 0,
+      //   position: 'top'
+      // });
     }
     return request;
   }
@@ -49,7 +51,7 @@ service.interceptors.response.use(
     if (!service.defaults.headers['x-csrf-token']) {
       service.defaults.headers['x-csrf-token'] = getCookie('csrfToken')
     }
-    Toast.clear();
+    ProcessBar.done()
     if (code === 200) {
       Toast.success({message: msg, position: 'top'})
       return Promise.resolve({code, data, msg})
@@ -90,9 +92,7 @@ service.interceptors.response.use(
 
   },
   error => {
-    debugger
-    Toast.clear();
-    // Toast.fail(error.response.data.msg);
+    ProcessBar.done()
     return Promise.reject(error);
   }
 );

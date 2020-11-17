@@ -1,5 +1,10 @@
 .process-bar {
   width: 100vw;
+  position: fixed;
+  z-index: 1;
+  top: 46px;
+  right: 0;
+  left: 0;
   border-radius: 10px;
   background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
   transform: translateX(-5vw);
